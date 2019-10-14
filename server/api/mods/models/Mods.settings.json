@@ -1,0 +1,40 @@
+{
+  "connection": "default",
+  "collectionName": "",
+  "info": {
+    "name": "mods",
+    "description": ""
+  },
+  "options": {
+    "timestamps": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "trackerid": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "testable",
+        "JIRA",
+        "Saving for Last"
+      ],
+      "type": "enumeration"
+    },
+    "employee": {
+      "model": "employees",
+      "via": "mods"
+    },
+    "versions": {
+      "collection": "versions",
+      "via": "mods"
+    },
+    "submissions": {
+      "collection": "submissions",
+      "dominant": true,
+      "via": "mods"
+    }
+  }
+}

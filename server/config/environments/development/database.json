@@ -1,0 +1,19 @@
+{
+  "defaultConnection": "default",
+  "connections": {
+    "default": {
+      "connector": "strapi-hook-mongoose",
+      "settings": {
+        "client": "mongo",
+        "host": "ds231501.mlab.com",
+        "port": "31501",
+        "database": "emaily-dev",
+        "username": "aaron",
+        "password": "password1"
+      },
+      "options": {
+        "authenticationDatabase": "emaily-dev"
+      }
+    }
+  }
+}

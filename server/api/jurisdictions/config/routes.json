@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/jurisdictions",
+      "handler": "Jurisdictions.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/jurisdictions/count",
+      "handler": "Jurisdictions.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/jurisdictions/:_id",
+      "handler": "Jurisdictions.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/jurisdictions",
+      "handler": "Jurisdictions.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/jurisdictions/:_id",
+      "handler": "Jurisdictions.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/jurisdictions/:_id",
+      "handler": "Jurisdictions.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

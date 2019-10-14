@@ -1,0 +1,35 @@
+{
+  "connection": "default",
+  "collectionName": "jurisdictions",
+  "info": {
+    "name": "jurisdictions",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "jurisdiction": {
+      "type": "string"
+    },
+    "number": {
+      "type": "integer"
+    },
+    "approvalstatuses": {
+      "collection": "approvalstatus",
+      "via": "jurisdictions"
+    },
+    "application": {
+      "model": "application",
+      "via": "jurisdictions"
+    },
+    "submissions": {
+      "collection": "submissions",
+      "dominant": true,
+      "via": "jurisdictions"
+    }
+  }
+}

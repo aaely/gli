@@ -1,0 +1,43 @@
+{
+  "connection": "default",
+  "collectionName": "properties",
+  "info": {
+    "name": "properties",
+    "description": ""
+  },
+  "options": {
+    "timestamps": true
+  },
+  "attributes": {
+    "name": {
+      "default": "",
+      "type": "string"
+    },
+    "image": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload",
+      "required": false
+    },
+    "phone": {
+      "default": "",
+      "type": "string"
+    },
+    "director": {
+      "default": "",
+      "type": "string"
+    },
+    "manager": {
+      "default": "",
+      "type": "string"
+    },
+    "playertracking": {
+      "default": "",
+      "type": "string"
+    },
+    "helpdesk": {
+      "default": "",
+      "type": "string"
+    }
+  }
+}

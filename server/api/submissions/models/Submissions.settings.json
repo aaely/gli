@@ -1,0 +1,80 @@
+{
+  "connection": "default",
+  "collectionName": "submissions",
+  "info": {
+    "name": "submissions",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "file": {
+      "type": "string"
+    },
+    "received": {
+      "type": "date"
+    },
+    "processed": {
+      "type": "date"
+    },
+    "begin": {
+      "type": "date"
+    },
+    "status": {
+      "enum": [
+        "On Hold",
+        "In Testing",
+        "Received"
+      ],
+      "type": "enumeration"
+    },
+    "mods": {
+      "collection": "mods",
+      "via": "submissions"
+    },
+    "urns": {
+      "collection": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "vendor": {
+      "model": "vendors",
+      "via": "submissions"
+    },
+    "modtestplan": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "smibtest": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "afttest": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "versions": {
+      "collection": "versions",
+      "via": "submission"
+    },
+    "jurisdictions": {
+      "collection": "jurisdictions",
+      "via": "submissions"
+    },
+    "approvalstatuses": {
+      "collection": "approvalstatus",
+      "via": "submissions"
+    },
+    "application": {
+      "model": "application",
+      "via": "submissions"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "connection": "default",
+  "collectionName": "employees",
+  "info": {
+    "name": "employees",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "fname": {
+      "default": "",
+      "type": "string"
+    },
+    "lname": {
+      "default": "",
+      "type": "string"
+    },
+    "extension": {
+      "default": "",
+      "type": "string"
+    },
+    "pnumber": {
+      "default": "",
+      "type": "string"
+    },
+    "mods": {
+      "collection": "mods",
+      "via": "employee"
+    },
+    "jobtitle": {
+      "model": "jobtitle",
+      "via": "employee"
+    }
+  }
+}

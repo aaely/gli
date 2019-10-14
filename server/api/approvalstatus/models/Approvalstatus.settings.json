@@ -1,0 +1,45 @@
+{
+  "connection": "default",
+  "collectionName": "approvalstatus",
+  "info": {
+    "name": "approvalstatus",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "versions": {
+      "collection": "versions",
+      "via": "approvalstatuses",
+      "dominant": true
+    },
+    "jurisdictions": {
+      "collection": "jurisdictions",
+      "via": "approvalstatuses",
+      "dominant": true
+    },
+    "status": {
+      "enum": [
+        "Approved",
+        "Withdrawn",
+        "Rejected",
+        "On Hold"
+      ],
+      "type": "enumeration"
+    },
+    "applications": {
+      "collection": "application",
+      "dominant": true,
+      "via": "approvalstatuses"
+    },
+    "submissions": {
+      "collection": "submissions",
+      "dominant": true,
+      "via": "approvalstatuses"
+    }
+  }
+}

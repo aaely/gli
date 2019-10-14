@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/approvalstatuses",
+      "handler": "Approvalstatus.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/approvalstatuses/count",
+      "handler": "Approvalstatus.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/approvalstatuses/:_id",
+      "handler": "Approvalstatus.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/approvalstatuses",
+      "handler": "Approvalstatus.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/approvalstatuses/:_id",
+      "handler": "Approvalstatus.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/approvalstatuses/:_id",
+      "handler": "Approvalstatus.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

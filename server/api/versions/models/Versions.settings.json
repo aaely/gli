@@ -1,0 +1,36 @@
+{
+  "connection": "default",
+  "collectionName": "versions",
+  "info": {
+    "name": "versions",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "version": {
+      "type": "string"
+    },
+    "mods": {
+      "collection": "mods",
+      "via": "versions",
+      "dominant": true
+    },
+    "approvalstatuses": {
+      "collection": "approvalstatus",
+      "via": "versions"
+    },
+    "application": {
+      "model": "application",
+      "via": "versions"
+    },
+    "submission": {
+      "model": "submissions",
+      "via": "versions"
+    }
+  }
+}

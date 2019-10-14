@@ -1,0 +1,41 @@
+{
+  "connection": "default",
+  "collectionName": "vendors",
+  "info": {
+    "name": "vendors",
+    "description": "Ex: MGT, ATI, Agyilysys"
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "name": {
+      "default": "",
+      "type": "string"
+    },
+    "phone": {
+      "default": "",
+      "type": "string"
+    },
+    "email": {
+      "default": "",
+      "type": "email"
+    },
+    "logo": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "applications": {
+      "collection": "application",
+      "via": "vendors"
+    },
+    "submissions": {
+      "collection": "submissions",
+      "via": "vendor"
+    }
+  }
+}

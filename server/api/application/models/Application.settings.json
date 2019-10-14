@@ -1,0 +1,49 @@
+{
+  "connection": "default",
+  "collectionName": "application",
+  "info": {
+    "name": "application",
+    "description": "Super Playmate, Pit Watch, CashClub, LMS"
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "name": {
+      "default": "",
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "vendors": {
+      "model": "vendors",
+      "via": "applications"
+    },
+    "versions": {
+      "collection": "versions",
+      "via": "application"
+    },
+    "approvalstatuses": {
+      "collection": "approvalstatus",
+      "via": "applications"
+    },
+    "jurisdictions": {
+      "collection": "jurisdictions",
+      "via": "application"
+    },
+    "howto": {
+      "type": "text"
+    },
+    "submissions": {
+      "collection": "submissions",
+      "via": "application"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/versions",
+      "handler": "Versions.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/versions/count",
+      "handler": "Versions.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/versions/:_id",
+      "handler": "Versions.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/versions",
+      "handler": "Versions.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/versions/:_id",
+      "handler": "Versions.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/versions/:_id",
+      "handler": "Versions.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
