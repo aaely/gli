@@ -29,13 +29,13 @@
       "via": "related",
       "plugin": "upload"
     },
-    "applications": {
-      "collection": "application",
-      "via": "vendors"
-    },
     "submissions": {
       "collection": "submissions",
       "via": "vendor"
+    },
+    "applications": {
+      "collection": "application",
+      "via": "vendors"
     }
   }
 }

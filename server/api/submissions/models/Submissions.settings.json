@@ -32,10 +32,6 @@
       ],
       "type": "enumeration"
     },
-    "mods": {
-      "collection": "mods",
-      "via": "submissions"
-    },
     "urns": {
       "collection": "file",
       "via": "related",
@@ -68,12 +64,16 @@
       "collection": "jurisdictions",
       "via": "submissions"
     },
+    "application": {
+      "model": "application",
+      "via": "submissions"
+    },
     "approvalstatuses": {
       "collection": "approvalstatus",
       "via": "submissions"
     },
-    "application": {
-      "model": "application",
+    "mods": {
+      "collection": "mods",
       "via": "submissions"
     }
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Strapi from "strapi-sdk-javascript/build/main";
+import Iframe from 'react-iframe';
 import {Box, 
         SearchField, 
         Icon,
@@ -10,11 +11,11 @@ import {Box,
         Button,
         Container } from 'gestalt';
 import Loader from './Loader';
-const apiUrl = process.env.API_URL || "http://192.168.0.178:1337";
+const apiUrl = process.env.API_URL || 'http://nv-dt-534:1337';
 const strapi = new Strapi(apiUrl);
 
 class Manufacturers extends Component {
-    state = {
+    /*state = {
         submissions: [],
         searchTerm: '',
         loadingItems: true
@@ -77,18 +78,19 @@ class Manufacturers extends Component {
         return submissions.filter(prop => {
             return prop.vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
         });
-    };
+    };*/
 
     render() {
-        let { loadingItems, searchTerm } = this.state;
+        //let { loadingItems, searchTerm } = this.state;
         return(
-        <Container>
+        <div>
+            {/*<Container>
                 <Box display="flex" justifyContent="center" marginTop={4} marginBottom={4}>
                 <SearchField 
                 id="searchField" 
                 accessibilityLabel="Items search field" 
                 onChange={this.handleChange} 
-                placeholder="Search Subissions" 
+                placeholder="Search by Manufacturer" 
                 value={searchTerm}
                 />
                 <Box
@@ -110,13 +112,13 @@ class Manufacturers extends Component {
                     }
                 }}
                 shape= "rounded"
-                >
-            {this.filteredItems(this.state).map(sub => {
+            >
+            this.filteredItems(this.state).map(sub => {
                 console.log(sub);
                 return(
                     <div className="card" key={sub._id} style={{marginTop: '30px', width: '100%', display: 'inline-block', marginRight: '3px', marginLeft: '3px'}}>
                     <div className="card-title" style={{textAlign: 'center'}}>{sub.file}</div>
-                    <div className="card-image">
+                    <div className="card-image" style={{height: '50%', width: '50%'}}>
                         <Image src={`${apiUrl}${sub.vendor.logo.url}`} alt={`${sub.vendor.logo._id}`} className='coffeeimage' style={{width: '10%', height: '10%'}}/>
                     </div>
                     <div className="card-content" style={{backgroundColor:'#686c72'}}>    
@@ -124,15 +126,15 @@ class Manufacturers extends Component {
                         <p>Manufacturer : <span className="right">{sub.vendor.name}</span></p>
                         <p>Jurisdictions: {sub.jurisdictions.map(a => {
                             return (
-                                <p>
-                                <Link style={{color: 'orange'}}to={`/jurisdiction/${a._id}`}>{a.jurisdiction}</Link>
-                                </p>
+                                <span>
+                                <Link style={{color: 'orange'}}to={`/jurisdiction/${a._id}`}>{a.jurisdiction} </Link>
+                                </span>
                             )
                         })} </p> 
-                        <p>Application: {sub.application.name}</p>
+                        <p>Application: <Link style={{color: '#7FFF00'}} to={`/application/${sub.application._id}`}>{sub.application.name}</Link></p>
                         <p>Version: {sub.versions.map(a => {
                             return (
-                                <span>{a.version}</span>
+                                <span style={{textAlign: 'yellow'}}>{a.version}</span>
                             )
                         })}</p>
                     </div>
@@ -140,10 +142,19 @@ class Manufacturers extends Component {
                         <Link to={`/submission/${sub._id}`}>{sub.file}</Link>
                     </div>
                     </div>
-            )})}
-            {loadingItems && <Loader />}
-            </Box>
-        </Container>
+                    )})
+                    </Box>
+            </Container>*/}
+            
+                    <Iframe url="http://njintranet5.gaminglabs.net/sites/engineering/LVSystems/wiki/Wiki%20Pages/Current%20Network%20Layout.aspx"
+                    width="100%"
+                    height="100%"
+                    id="myId"
+                    className="myClassname"
+                    display="initial"
+                    position="absolute"/>
+
+            </div>
         );
     }
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Collapsible from 'react-collapsible';
 import { Box,
     Heading,
     Text,
@@ -15,7 +16,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
-const apiUrl = process.env.API_URL || 'http://192.168.0.178:1337';
+const apiUrl = process.env.API_URL || 'http://nv-dt-534:1337';
 const strapi = new Strapi(apiUrl);
 
 class Vendors extends Component {
@@ -39,8 +40,10 @@ class Vendors extends Component {
                 submissions: [],
                 loadingItems: true,
                 editorState,
-                uploadData: ''
+                uploadedImages: [],
+                html
             }
+            this._uploadImageCallBack = this._uploadImageCallBack.bind(this);
         }
     }
 
@@ -54,6 +57,12 @@ class Vendors extends Component {
                     _id
                     name
                     howto
+                    mods {
+                        _id
+                        title
+                        moddetails
+                        trackerid
+                    }
                     submissions {
                         _id
                         file
@@ -80,12 +89,14 @@ class Vendors extends Component {
             submissions: response.data.application.submissions,
             loadingItems: false
         });
-        let contentBlock = htmlToDraft(this.state.application.howto);
+        let x = this.state.application.howto.replace(/'''/g, '"');
+        let contentBlock = htmlToDraft(x.replace(/----/g, '\\'));
         if (contentBlock) {
             let contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
             let editorState = EditorState.createWithContent(contentState);
             this.setState({
-                editorState
+                editorState,
+                html: x.replace(/----/g, '\\')
             });
         }
         }catch (err) {
@@ -94,17 +105,22 @@ class Vendors extends Component {
         }
     }
 
-    async saveChanges() {
+    saveChanges = () => {
         try {
-            await strapi.request('PUT', 'graphql', {
+            let { html, application } = this.state;
+            html = html.replace(/"/g, '\'\'\'');
+            html = html.replace(/\\/g, '----')
+            console.log(html);
+            strapi.request('POST', 'graphql', {
                 data: {
-                    mutation: `mutation {
+                    query: `mutation {
                         updateApplication(input: {
                           where: {
-                            id: "5bc18fb154e4a664b438c9b4"
+                            id: "${application._id}"
                           },
                           data: {
-                            howto: "testing 123"
+                            howto: "${html}"
+                          }
                         }) {
                           application {
                             howto
@@ -120,9 +136,80 @@ class Vendors extends Component {
 
     onEditorStateChange = (editorState) => {
         this.setState({
-            editorState
+            editorState,
+            html: draftToHtml(convertToRaw(editorState.getCurrentContent())).replace(/[\n]/g, '')
         });
     }
+
+    renderMods() {
+        let { application } = this.state;
+        return (
+            <div>
+                {application.mods.map(a => {
+                    return (
+                        <p>
+                            <strong>{a.title} | {a.trackerid}</strong><br />
+                            {a.moddetails}
+                        </p>
+                    )
+                })}
+            </div>
+        );
+    }
+
+    renderDropDown1() {
+        return (
+            <span className="trigger">
+                Jurisdictions:
+            </span>
+        );
+    }
+
+    renderDropDown2() {
+        return (
+            <span className="trigger">
+                Mods:
+            </span>
+        );
+    }
+
+    renderHide() {
+        return (
+            <span className="trigger">
+                Hide
+            </span>
+        );
+    }
+
+    _uploadImageCallBack = (file) => {
+        // long story short, every time we upload an image, we
+        // need to save it to the state so we can get it's data
+        // later when we decide what to do with it.
+    
+       // Make sure you have a uploadImages: [] as your default state
+        let { uploadedImages } = this.state;
+        console.log(uploadedImages);
+        const imageObject = {
+          file: file,
+          localSrc: URL.createObjectURL(file),
+          dburl: `${apiUrl}/uploads/${file.name}`
+        }
+
+        uploadedImages.push(imageObject);
+    
+        this.setState({uploadedImages: uploadedImages})
+    
+        // We need to return a promise with the image src
+        // the img src we will use here will be what's needed
+        // to preview it in the browser. This will be different than what
+        // we will see in the index.md file we generate.
+        return new Promise(
+          (resolve, reject) => {
+            resolve({ data: { link: imageObject.localSrc } });
+          }
+        );
+    }
+
 
     render() {
         let { loadingItems, application, submissions, editorState } = this.state;
@@ -143,38 +230,51 @@ class Vendors extends Component {
             <Box display="flex" direction="column" alignItems="center">
                 <Box marginBottom={5}>
                     <Heading color="blue">{application.name}</Heading>
-                    <Editor 
-                    editorState={editorState}
-                    onEditorStateChange={this.onEditorStateChange}
-                    />
-                    <textarea
-                        enabled
-                        value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-                    />
-                    <button style={{color: 'black'}} onClick={this.saveChanges}>Save</button>
-                    <Link to={`/application/${this.props.match.params.applicationId}/howto`}>Test</Link>
+                    <h3><strong>Submissions:</strong></h3>
                 {submissions.map(a => {
                     return (
                         <p>
-                            {a.file} <br />
+                            <Link to={`/submission/${a._id}`}>{a.file}</Link> <br />
+                            {application.name}
                             {a.versions.map(b => {
                                 return (
-                                    <span>{b.version}</span>
+                                    <span> {b.version}</span>
                                 )
                             })}<br />
-                            {a.jurisdictions.map(c => {
+                            <Collapsible 
+                            transitionTime="250" 
+                            trigger={this.renderDropDown1()}
+                            triggerWhenOpen={this.renderHide()}
+                            >
+                                {a.jurisdictions.map(c => {
                                 return (
                                     <p>{c.jurisdiction} -- Status: {c.approvalstatuses.map(d => {
                                         return (
                                             <span>{d.status}</span>
                                         )
-                                    })}   </p>
-                                )
-                            })}
+                                        })}   </p>
+                                    )
+                                })}
+                            </Collapsible>
+                            <Collapsible
+                            transitionTime="250"
+                            trigger={this.renderDropDown2()}
+                            triggerWhenOpen={this.renderHide()}
+                            >
+                            {this.renderMods()}
+                            </Collapsible>
+                            <Editor 
+                            editorState={editorState}
+                            onEditorStateChange={this.onEditorStateChange}
+                            toolbar={{
+                                image: { uploadCallback: this._uploadImageCallBack },
+                                inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,application/pdf,text/plain,application/vnd.openxmlformatsofficedocument.wordprocessingml.document,application/msword,application/vnd.ms-excel'
+                              }}
+                            />
+                    <button style={{backgroundColor: 'black',color: 'green', borderRadius: '20px'}} onClick={this.saveChanges}>Save</button>
                         </p>
                     )
                 })}
-
                 </Box>
             </Box>
             </Box>

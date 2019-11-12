@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import './App.css';
+import '../CSS/StyleSheet1.css';
 
 import Dashboard from './Dashboard';
 import Submission from './Submission';

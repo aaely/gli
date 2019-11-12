@@ -1,12 +1,15 @@
 {
   "connection": "default",
-  "collectionName": "",
+  "collectionName": "mods",
   "info": {
     "name": "mods",
     "description": ""
   },
   "options": {
-    "timestamps": true
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
   },
   "attributes": {
     "title": {
@@ -17,11 +20,16 @@
     },
     "status": {
       "enum": [
-        "testable",
+        "default",
+        "Audit",
+        "Testable",
         "JIRA",
-        "Saving for Last"
+        "Saving for Last",
+        "Complete",
+        "Revoked"
       ],
-      "type": "enumeration"
+      "type": "enumeration",
+      "required": true
     },
     "employee": {
       "model": "employees",
@@ -33,8 +41,40 @@
     },
     "submissions": {
       "collection": "submissions",
-      "dominant": true,
+      "via": "mods",
+      "dominant": true
+    },
+    "jira": {
+      "type": "string"
+    },
+    "modnumber": {
+      "type": "integer"
+    },
+    "moddetails": {
+      "type": "text"
+    },
+    "application": {
+      "model": "application",
       "via": "mods"
+    },
+    "rewrite": {
+      "type": "text"
+    },
+    "teststeps": {
+      "type": "text"
+    },
+    "testingperformed": {
+      "type": "text"
+    },
+    "testingzip": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "images": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
     }
   }
 }

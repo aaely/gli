@@ -10,7 +10,7 @@ import {Box,
         Button,
         Container } from 'gestalt';
 import Loader from './Loader';
-const apiUrl = process.env.API_URL || "http://192.168.0.178:1337";
+const apiUrl = process.env.API_URL || 'http://nv-dt-534:1337';
 const strapi = new Strapi(apiUrl);
 
 class Submissions extends Component {
@@ -88,7 +88,7 @@ class Submissions extends Component {
                 id="searchField" 
                 accessibilityLabel="Items search field" 
                 onChange={this.handleChange} 
-                placeholder="Search Subissions" 
+                placeholder="Search Subissions or Apps" 
                 value={searchTerm}
                 />
                 <Box
@@ -116,23 +116,23 @@ class Submissions extends Component {
                 return(
                     <div className="card" key={sub._id} style={{marginTop: '30px', width: '100%', display: 'inline-block', marginRight: '3px', marginLeft: '3px'}}>
                     <div className="card-title" style={{textAlign: 'center'}}>{sub.file}</div>
-                    <div className="card-image">
+                    <div className="card-image" style={{height: '50%', width: '50%'}}>
                         <Image src={`${apiUrl}${sub.vendor.logo.url}`} alt={`${sub.vendor.logo._id}`} className='coffeeimage' style={{width: '10%', height: '10%'}}/>
                     </div>
                     <div className="card-content" style={{backgroundColor:'#686c72'}}>    
                         <p></p>
-                        <p>Manufacturer : <span className="right">{sub.vendor.name}</span></p>
-                        <p>Jurisdictions: {sub.jurisdictions.map(a => {
+                        <p>Manufacturer : <Link className="right" style={{color: '#7FFF00'}} to={`/manufacturer/${sub.vendor._id}`}>{sub.vendor.name}</Link></p>
+                        <p>Jurisdictions: <br />{sub.jurisdictions.map(a => {
                             return (
-                                <p>
-                                <Link style={{color: 'orange'}}to={`/jurisdiction/${a._id}`}>{a.jurisdiction}</Link>
-                                </p>
+                                <span className="right">
+                                <Link style={{color: 'orange'}}to={`/jurisdiction/${a._id}`}>{a.jurisdiction} {'\u00A0'}</Link>
+                                </span>
                             )
                         })} </p> 
-                        <p>Application: <Link to={`/application/${sub.application._id}`}>{sub.application.name}</Link></p>
+                        <p>Application: <Link className="right" style={{color: '#7FFF00'}} to={`/application/${sub.application._id}`}>{sub.application.name}</Link></p>
                         <p>Version: {sub.versions.map(a => {
                             return (
-                                <span>{a.version}</span>
+                                <span className="right" style={{color: 'yellow'}}>{a.version}</span>
                             )
                         })}</p>
                     </div>

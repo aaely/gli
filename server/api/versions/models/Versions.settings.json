@@ -15,21 +15,21 @@
     "version": {
       "type": "string"
     },
-    "mods": {
-      "collection": "mods",
-      "via": "versions",
-      "dominant": true
-    },
-    "approvalstatuses": {
-      "collection": "approvalstatus",
+    "submission": {
+      "model": "submissions",
       "via": "versions"
     },
     "application": {
       "model": "application",
       "via": "versions"
     },
-    "submission": {
-      "model": "submissions",
+    "approvalstatuses": {
+      "collection": "approvalstatus",
+      "via": "versions"
+    },
+    "mods": {
+      "collection": "mods",
+      "dominant": true,
       "via": "versions"
     }
   }

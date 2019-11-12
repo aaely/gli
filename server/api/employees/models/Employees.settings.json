@@ -28,12 +28,12 @@
       "default": "",
       "type": "string"
     },
-    "mods": {
-      "collection": "mods",
-      "via": "employee"
-    },
     "jobtitle": {
       "model": "jobtitle",
+      "via": "employee"
+    },
+    "mods": {
+      "collection": "mods",
       "via": "employee"
     }
   }

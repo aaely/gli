@@ -27,19 +27,20 @@
         "Approved",
         "Withdrawn",
         "Rejected",
-        "On Hold"
+        "On Hold",
+        "In Testing"
       ],
       "type": "enumeration"
     },
-    "applications": {
-      "collection": "application",
-      "dominant": true,
-      "via": "approvalstatuses"
-    },
     "submissions": {
       "collection": "submissions",
-      "dominant": true,
-      "via": "approvalstatuses"
+      "via": "approvalstatuses",
+      "dominant": true
+    },
+    "applications": {
+      "collection": "application",
+      "via": "approvalstatuses",
+      "dominant": true
     }
   }
 }
