@@ -26,7 +26,8 @@
         "JIRA",
         "Saving for Last",
         "Complete",
-        "Revoked"
+        "Revoked",
+        "Questionable"
       ],
       "type": "enumeration",
       "required": true
@@ -75,6 +76,9 @@
       "model": "file",
       "via": "related",
       "plugin": "upload"
+    },
+    "versionaffected": {
+      "type": "string"
     }
   }
 }

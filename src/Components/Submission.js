@@ -51,7 +51,8 @@ class Submission extends Component {
                 modsCount: 0,
                 testableModsCount: 0,
                 completeModsCount: 0,
-                jiraModsCount: 0
+                jiraModsCount: 0,
+                questionableModsCount: 0
             }
         }
     }
@@ -90,6 +91,7 @@ class Submission extends Component {
                           moddetails
                           status
                           jira
+                          teststeps
                           testingzip {
                               _id
                               url
@@ -130,6 +132,9 @@ class Submission extends Component {
             }).length,
             jiraModsCount: response.data.submission.mods.filter(prop => {
                 return prop.status.toLowerCase().includes('jira'.toLowerCase())
+            }).length,
+            questionableModsCount: response.data.submission.mods.filter(prop => {
+                return prop.status.toLowerCase().includes('questionable'.toLowerCase())
             }).length
         });
         console.log(this.state);
@@ -154,8 +159,8 @@ class Submission extends Component {
         return (
             <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
                 <h5>Mod {x.modnumber}</h5>
+                <h5>{x.trackerid}</h5>                   
                 <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                <h5>{x.trackerid}</h5>
                 <h5>Testing Status: {x.status}</h5>
                 {x.jira != null &&
                     <h5>
@@ -178,25 +183,38 @@ class Submission extends Component {
                     toolbarHidden='true'
                     />
                 </Collapsible>
+                {x.teststeps != null &&
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown9()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.teststeps.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    }
             </div>
             );}
         ))
     }
 
-    renderAuditMods = () => {
+    renderQuestionableMods = () => {
         let { mods } = this.state;
-        let auditMods = mods.filter(prop => {
-            return prop.status.toLowerCase().includes('audit'.toLowerCase())
+        let questionableMods = mods.filter(prop => {
+            return prop.status.toLowerCase().includes('questionable'.toLowerCase())
         })
 
         return (
             <div>
-                {auditMods.map(x => {
+                {questionableMods.map(x => {
                 return (
                     <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
                     <h5>Mod {x.modnumber}</h5>
+                    <h5>{x.trackerid}</h5>                   
                     <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                    <h5>{x.trackerid}</h5>
                     <h5>Testing Status: {x.status}</h5>
                     {x.jira != null &&
                         <h5>
@@ -219,6 +237,75 @@ class Submission extends Component {
                         toolbarHidden='true'
                         />
                     </Collapsible>
+                    {x.teststeps != null &&
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown9()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.teststeps.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    }
+                </div>
+                )
+                })}
+            </div>
+        )
+    }
+
+    renderAuditMods = () => {
+        let { mods } = this.state;
+        let auditMods = mods.filter(prop => {
+            return prop.status.toLowerCase().includes('audit'.toLowerCase())
+        })
+
+        return (
+            <div>
+                {auditMods.map(x => {
+                return (
+                    <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
+                    <h5>Mod {x.modnumber}</h5>
+                    <h5>{x.trackerid}</h5>                   
+                    <h5 style={{color: '#007bff'}}>{x.title}</h5>
+                    <h5>Testing Status: {x.status}</h5>
+                    {x.jira != null &&
+                        <h5>
+                            <a href={x.jira}>Jira</a>
+                        </h5>
+                    }
+                    {x.testingzip != null &&
+                        <h5>
+                            <a href={`${apiUrl}${x.testingzip.url}`} style={{backgroundColor: 'black', color: 'hsl(128, 100%, 50%)'}}>Download Testing Performed</a>
+                        </h5>
+                    }
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown4()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.moddetails.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    {x.teststeps != null &&
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown9()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.teststeps.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    }
                 </div>
                 )
                 })}
@@ -237,8 +324,8 @@ class Submission extends Component {
                 return (
                     <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
                     <h5>Mod {x.modnumber}</h5>
+                    <h5>{x.trackerid}</h5>                   
                     <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                    <h5>{x.trackerid}</h5>
                     <h5>Testing Status: {x.status}</h5>
                     {x.jira != null &&
                         <h5>
@@ -261,6 +348,19 @@ class Submission extends Component {
                         toolbarHidden='true'
                         />
                     </Collapsible>
+                    {x.teststeps != null &&
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown9()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.teststeps.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    }
                 </div>
                 )
                 })}
@@ -279,12 +379,12 @@ class Submission extends Component {
                 return (
                     <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
                     <h5>Mod {x.modnumber}</h5>
+                    <h5>{x.trackerid}</h5>                   
                     <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                    <h5>{x.trackerid}</h5>
                     <h5>Testing Status: {x.status}</h5>
                     {x.jira != null &&
                         <h5>
-                            <a href={x.jira}>Jira</a>
+                            <a href={x.jira} style={{backgroundColor: 'black', color: 'orange'}}>Jira</a>
                         </h5>
                     }
                     {x.testingzip != null &&
@@ -303,6 +403,74 @@ class Submission extends Component {
                         toolbarHidden='true'
                         />
                     </Collapsible>
+                    {x.teststeps != null &&
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown9()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.teststeps.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    }
+                </div>
+                )
+                })}
+            </div>
+        )
+    }
+
+    renderCompleteMods = () => {
+        let { mods } = this.state;
+        let completeMods = mods.filter(prop => {
+            return prop.status.toLowerCase().includes('complete'.toLowerCase())
+        })
+        return (
+            <div>
+                {completeMods.map(x => {
+                return (
+                    <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
+                    <h5>Mod {x.modnumber}</h5>
+                    <h5>{x.trackerid}</h5>                   
+                    <h5 style={{color: '#007bff'}}>{x.title}</h5>
+                    <h5>Testing Status: {x.status}</h5>
+                    {x.jira != null &&
+                        <h5>
+                            <a href={x.jira} style={{backgroundColor: 'black', color: 'orange'}}>Jira</a>
+                        </h5>
+                    }
+                    {x.testingzip != null &&
+                        <h5>
+                            <a href={`${apiUrl}${x.testingzip.url}`} style={{backgroundColor: 'black', color: 'hsl(128, 100%, 50%)'}}>Download Testing Performed</a>
+                        </h5>
+                    }
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown4()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.moddetails.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    {x.teststeps != null &&
+                    <Collapsible 
+                    transitionTime="250"
+                    trigger={this.renderDropDown9()}
+                    triggerWhenOpen={this.renderHide()}
+                    >
+                        <Editor 
+                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.teststeps.replace(/'''/g, '"')).contentBlocks))}
+                        readOnly='true'
+                        toolbarHidden='true'
+                        />
+                    </Collapsible>
+                    }
                 </div>
                 )
                 })}
@@ -343,6 +511,14 @@ class Submission extends Component {
         );
     }
 
+    renderDropDown9() {
+        return (
+            <span className="trigger">
+                Test Steps:
+            </span>
+        );
+    }
+
     renderDropDown5() {
         let { auditModsCount } = this.state;
         return (
@@ -366,6 +542,24 @@ class Submission extends Component {
         return (
             <span className="trigger">
                 Mods in JIRA:  ({jiraModsCount})
+            </span>
+        );
+    }
+
+    renderDropDown8() {
+        let { questionableModsCount } = this.state;
+        return (
+            <span className="trigger">
+                Possible Audit:  ({questionableModsCount})
+            </span>
+        );
+    }
+
+    renderDropDown10() {
+        let { completeModsCount } = this.state;
+        return (
+            <span className="trigger">
+                Completed:  ({completeModsCount})
             </span>
         );
     }
@@ -449,7 +643,7 @@ class Submission extends Component {
       }
     
     render() {
-        let { submission, vendor, jurisdictions, loadingItems, vendorId, numPages, pageNumber, urns, mods, application, versions, editorState } = this.state;
+        let { submission, vendor, jurisdictions, loadingItems, vendorId, application, versions, modsCount, auditModsCount, completeModsCount, jiraModsCount, questionableModsCount, testableModsCount } = this.state;
         return(
             <div style={{textAlign: 'center'}}>
                 <h1 style={{textAlign: 'center'}}>{submission}</h1>
@@ -487,27 +681,46 @@ class Submission extends Component {
                 >
                     {this.renderMods()}
                 </Collapsible>
+                {auditModsCount > 0 &&
                 <Collapsible 
                 transitionTime="250" 
                 trigger={this.renderDropDown5()}
                 triggerWhenOpen={this.renderHide()}
                 >
                     {this.renderAuditMods()}
-                </Collapsible>
+                </Collapsible>}
+                {testableModsCount > 0 && 
                 <Collapsible 
                 transitionTime="250" 
                 trigger={this.renderDropDown6()}
                 triggerWhenOpen={this.renderHide()}
                 >
                     {this.renderTestableMods()}
-                </Collapsible>
+                </Collapsible>}
+                {jiraModsCount > 0 &&
                 <Collapsible 
                 transitionTime="250" 
                 trigger={this.renderDropDown7()}
                 triggerWhenOpen={this.renderHide()}
                 >
                     {this.renderJiraMods()}
-                </Collapsible>
+                </Collapsible>}
+                {questionableModsCount > 0 &&
+                <Collapsible 
+                transitionTime="250" 
+                trigger={this.renderDropDown8()}
+                triggerWhenOpen={this.renderHide()}
+                >
+                    {this.renderQuestionableMods()}
+                </Collapsible>}
+                {completeModsCount > 0 &&
+                <Collapsible 
+                transitionTime="250" 
+                trigger={this.renderDropDown10()}
+                triggerWhenOpen={this.renderHide()}
+                >
+                    {this.renderCompleteMods()}
+                </Collapsible>}
                 </div>
                 {loadingItems && <Loader />}
             </div>
