@@ -4,10 +4,10 @@
     "default": {
       "connector": "strapi-hook-mongoose",
       "settings": {
-        "client": "mongo",
-        "host": "ds231501.mlab.com",
-        "port": "31501",
         "database": "emaily-dev",
+        "host": "ds231501.mlab.com",
+        "srv": false,
+        "port": "31501",
         "username": "aaron",
         "password": "password1"
       },

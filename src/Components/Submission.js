@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
+import Test from './propstest';
 import { Link } from 'react-router-dom';
 import Strapi from 'strapi-sdk-javascript/build/main';
 import Loader from './Loader';
+import MyPieChart from './PieChart';
+import { FaRegEdit } from 'react-icons/fa';
 import { pdfjs, Document, Page, View } from 'react-pdf';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
 import Collapsible from 'react-collapsible';
+import ModsList from './ModsList';
+import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-const apiUrl = process.env.API_URL || 'http://nv-dt-534:1337';
+const apiUrl = process.env.API_URL || 'http://localhost:1337';
 const strapi = new Strapi(apiUrl);
 
 class Submission extends Component {
-    /*state = {
-        loadingItems: true,
-        submission: '',
-        jurisdictions: [],
-        vendor: '',
-        vendorId: '',
-        numPages: null,
-        pageNumber: 1,
-        urns: [],
-        mods: []
-    }*/
 
     constructor(props) {
         super(props);
@@ -51,14 +45,16 @@ class Submission extends Component {
                 modsCount: 0,
                 testableModsCount: 0,
                 completeModsCount: 0,
-                jiraModsCount: 0
+                jiraModsCount: 0,
+                revokedModsCount: 0,
+                activeIndex: 0
             }
         }
     }
 
     async componentDidMount() {
         try {
-            const response = await strapi.request('POST', '/graphql', {
+            let response = await strapi.request('POST', '/graphql', {
             data: {
                 query: `query {
                     submission (id : "${this.props.match.params.submissionId}") {
@@ -115,22 +111,8 @@ class Submission extends Component {
             loadingItems: false,
             vendorId: response.data.submission.vendor._id,
             urns: response.data.submission.urns,
-            mods: response.data.submission.mods,
             application: response.data.submission.application,
             versions: response.data.submission.versions,
-            modsCount: response.data.submission.mods.length,
-            auditModsCount: response.data.submission.mods.filter(prop => {
-                return prop.status.toLowerCase().includes('audit'.toLowerCase())
-            }).length,
-            testableModsCount: response.data.submission.mods.filter(prop => {
-                return prop.status.toLowerCase().includes('testable'.toLowerCase())
-            }).length,
-            completeModsCount: response.data.submission.mods.filter(prop => {
-                return prop.status.toLowerCase().includes('complete'.toLowerCase())
-            }).length,
-            jiraModsCount: response.data.submission.mods.filter(prop => {
-                return prop.status.toLowerCase().includes('jira'.toLowerCase())
-            }).length
         });
         console.log(this.state);
         }catch (err) {
@@ -144,170 +126,6 @@ class Submission extends Component {
             editorState,
             html: draftToHtml(convertToRaw(editorState.getCurrentContent())).replace(/[\n]/g, '')
         });
-    }
-
-    renderMods() {
-        let { mods } = this.state;
-        mods = mods.sort((a, b) => (a.modnumber - b.modnumber));
-        return (
-        mods.map(x => {
-        return (
-            <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
-                <h5>Mod {x.modnumber}</h5>
-                <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                <h5>{x.trackerid}</h5>
-                <h5>Testing Status: {x.status}</h5>
-                {x.jira != null &&
-                    <h5>
-                        <a href={x.jira} style={{backgroundColor: 'black', color: 'orange'}}>Jira</a>
-                    </h5>
-                }
-                {x.testingzip != null &&
-                    <h5>
-                        <a href={`${apiUrl}${x.testingzip.url}`} style={{backgroundColor: 'black', color: 'hsl(128, 100%, 50%)'}}>Download Testing Performed</a>
-                    </h5>
-                }
-                <Collapsible 
-                transitionTime="250"
-                trigger={this.renderDropDown4()}
-                triggerWhenOpen={this.renderHide()}
-                >
-                    <Editor 
-                    editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.moddetails.replace(/'''/g, '"')).contentBlocks))}
-                    readOnly='true'
-                    toolbarHidden='true'
-                    />
-                </Collapsible>
-            </div>
-            );}
-        ))
-    }
-
-    renderAuditMods = () => {
-        let { mods } = this.state;
-        let auditMods = mods.filter(prop => {
-            return prop.status.toLowerCase().includes('audit'.toLowerCase())
-        })
-
-        return (
-            <div>
-                {auditMods.map(x => {
-                return (
-                    <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
-                    <h5>Mod {x.modnumber}</h5>
-                    <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                    <h5>{x.trackerid}</h5>
-                    <h5>Testing Status: {x.status}</h5>
-                    {x.jira != null &&
-                        <h5>
-                            <a href={x.jira}>Jira</a>
-                        </h5>
-                    }
-                    {x.testingzip != null &&
-                        <h5>
-                            <a href={`${apiUrl}${x.testingzip.url}`} style={{backgroundColor: 'black', color: 'hsl(128, 100%, 50%)'}}>Download Testing Performed</a>
-                        </h5>
-                    }
-                    <Collapsible 
-                    transitionTime="250"
-                    trigger={this.renderDropDown4()}
-                    triggerWhenOpen={this.renderHide()}
-                    >
-                        <Editor 
-                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.moddetails.replace(/'''/g, '"')).contentBlocks))}
-                        readOnly='true'
-                        toolbarHidden='true'
-                        />
-                    </Collapsible>
-                </div>
-                )
-                })}
-            </div>
-        )
-    }
-
-    renderTestableMods = () => {
-        let { mods } = this.state;
-        let testableMods = mods.filter(prop => {
-            return prop.status.toLowerCase().includes('testable'.toLowerCase())
-        })
-        return (
-            <div>
-                {testableMods.map(x => {
-                return (
-                    <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
-                    <h5>Mod {x.modnumber}</h5>
-                    <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                    <h5>{x.trackerid}</h5>
-                    <h5>Testing Status: {x.status}</h5>
-                    {x.jira != null &&
-                        <h5>
-                            <a href={x.jira}>Jira</a>
-                        </h5>
-                    }
-                    {x.testingzip != null &&
-                        <h5>
-                            <a href={`${apiUrl}${x.testingzip.url}`} style={{backgroundColor: 'black', color: 'hsl(128, 100%, 50%)'}}>Download Testing Performed</a>
-                        </h5>
-                    }
-                    <Collapsible 
-                    transitionTime="250"
-                    trigger={this.renderDropDown4()}
-                    triggerWhenOpen={this.renderHide()}
-                    >
-                        <Editor 
-                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.moddetails.replace(/'''/g, '"')).contentBlocks))}
-                        readOnly='true'
-                        toolbarHidden='true'
-                        />
-                    </Collapsible>
-                </div>
-                )
-                })}
-            </div>
-        )
-    }
-
-    renderJiraMods = () => {
-        let { mods } = this.state;
-        let jiraMods = mods.filter(prop => {
-            return prop.status.toLowerCase().includes('jira'.toLowerCase())
-        })
-        return (
-            <div>
-                {jiraMods.map(x => {
-                return (
-                    <div className="card" key={x._id} style={{marginTop: '10px', backgroundColor: '#eee'}}>
-                    <h5>Mod {x.modnumber}</h5>
-                    <h5 style={{color: '#007bff'}}>{x.title}</h5>
-                    <h5>{x.trackerid}</h5>
-                    <h5>Testing Status: {x.status}</h5>
-                    {x.jira != null &&
-                        <h5>
-                            <a href={x.jira}>Jira</a>
-                        </h5>
-                    }
-                    {x.testingzip != null &&
-                        <h5>
-                            <a href={`${apiUrl}${x.testingzip.url}`} style={{backgroundColor: 'black', color: 'hsl(128, 100%, 50%)'}}>Download Testing Performed</a>
-                        </h5>
-                    }
-                    <Collapsible 
-                    transitionTime="250"
-                    trigger={this.renderDropDown4()}
-                    triggerWhenOpen={this.renderHide()}
-                    >
-                        <Editor 
-                        editorState={EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(x.moddetails.replace(/'''/g, '"')).contentBlocks))}
-                        readOnly='true'
-                        toolbarHidden='true'
-                        />
-                    </Collapsible>
-                </div>
-                )
-                })}
-            </div>
-        )
     }
 
     renderDropDown1() {
@@ -335,41 +153,6 @@ class Submission extends Component {
         );
     }
 
-    renderDropDown4() {
-        return (
-            <span className="trigger">
-                Details:
-            </span>
-        );
-    }
-
-    renderDropDown5() {
-        let { auditModsCount } = this.state;
-        return (
-            <span className="trigger">
-                Audited Mods: ({auditModsCount})
-            </span>
-        );
-    }
-
-    renderDropDown6() {
-        let { testableModsCount } = this.state;
-        return (
-            <span className="trigger">
-                Testable Mods: ({testableModsCount})
-            </span>
-        );
-    }
-
-    renderDropDown7() {
-        let { jiraModsCount } = this.state;
-        return (
-            <span className="trigger">
-                Mods in JIRA:  ({jiraModsCount})
-            </span>
-        );
-    }
-
     renderHide() {
         return (
             <span className="trigger">
@@ -377,6 +160,7 @@ class Submission extends Component {
             </span>
         );
     }
+
 
     onDocumentLoadSuccess = ({ numPages }) => {
         this.setState({ numPages });
@@ -449,7 +233,7 @@ class Submission extends Component {
       }
     
     render() {
-        let { submission, vendor, jurisdictions, loadingItems, vendorId, numPages, pageNumber, urns, mods, application, versions, editorState } = this.state;
+        let { urns, submission, vendor, jurisdictions, loadingItems, vendorId, application, versions } = this.state;
         return(
             <div style={{textAlign: 'center'}}>
                 <h1 style={{textAlign: 'center'}}>{submission}</h1>
@@ -472,43 +256,16 @@ class Submission extends Component {
                     );
                 })}
                 </Collapsible>
+                {urns.length > 0 && 
                 <Collapsible 
                 transitionTime="250" 
                 trigger={this.renderDropDown2()}
                 triggerWhenOpen={this.renderHide()}
                 >
                     {this.renderURNs()}
-                </Collapsible>
-                <div>
-                <Collapsible 
-                transitionTime="250" 
-                trigger={this.renderDropDown3()}
-                triggerWhenOpen={this.renderHide()}
-                >
-                    {this.renderMods()}
-                </Collapsible>
-                <Collapsible 
-                transitionTime="250" 
-                trigger={this.renderDropDown5()}
-                triggerWhenOpen={this.renderHide()}
-                >
-                    {this.renderAuditMods()}
-                </Collapsible>
-                <Collapsible 
-                transitionTime="250" 
-                trigger={this.renderDropDown6()}
-                triggerWhenOpen={this.renderHide()}
-                >
-                    {this.renderTestableMods()}
-                </Collapsible>
-                <Collapsible 
-                transitionTime="250" 
-                trigger={this.renderDropDown7()}
-                triggerWhenOpen={this.renderHide()}
-                >
-                    {this.renderJiraMods()}
-                </Collapsible>
-                </div>
+                </Collapsible>}
+                <MyPieChart submissionId={this.props.match.params.submissionId}/>
+                <ModsList submissionId={this.props.match.params.submissionId}/>
                 {loadingItems && <Loader />}
             </div>
         );

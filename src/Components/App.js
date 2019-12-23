@@ -12,7 +12,8 @@ import Jurisdictions from './Jurisdictions';
 import Application from './Application';
 import Vendors from './Vendors';
 import Appwiki from './Appwiki';
-import test from './test';
+import UpdateMod from './UpdateMod';
+import NewMod from './NewMod';
 
 class App extends Component {
   render() {
@@ -30,7 +31,8 @@ class App extends Component {
           <Route component={Appwiki} path="/application/:applicationId/howto" />
           <Route component={Apps} path="/manufacturers" />
           <Route component={Vendors} path="/manufacturer/:vendorId" />
-          <Route component={test} path="/test" />
+          <Route component={NewMod} path="/newmod/:submissionId" />
+          <Route component={UpdateMod} path="/updatemod/:modId" />
         </Switch>
         </React.Fragment>
       </Router>

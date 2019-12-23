@@ -10,7 +10,7 @@ import {Box,
         Button,
         Container } from 'gestalt';
 import Loader from './Loader';
-const apiUrl = process.env.API_URL || 'http://nv-dt-534:1337';
+const apiUrl = process.env.API_URL || 'http://localhost:1337';
 const strapi = new Strapi(apiUrl);
 
 class Submissions extends Component {
@@ -114,7 +114,7 @@ class Submissions extends Component {
             {this.filteredItems(this.state).map(sub => {
                 console.log(sub);
                 return(
-                    <div className="card" key={sub._id} style={{marginTop: '30px', width: '100%', display: 'inline-block', marginRight: '3px', marginLeft: '3px'}}>
+                    <div className="card" key={sub._id} style={{marginTop: '30px', width: '100%', display: 'inline-block', marginRight: '3px', marginLeft: '3px', display: 'inline-grid'}}>
                     <div className="card-title" style={{textAlign: 'center'}}>{sub.file}</div>
                     <div className="card-image" style={{height: '50%', width: '50%'}}>
                         <Image src={`${apiUrl}${sub.vendor.logo.url}`} alt={`${sub.vendor.logo._id}`} className='coffeeimage' style={{width: '10%', height: '10%'}}/>

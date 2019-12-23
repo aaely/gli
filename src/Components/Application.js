@@ -16,17 +16,11 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
-const apiUrl = process.env.API_URL || 'http://nv-dt-534:1337';
+import { Alert } from 'reactstrap';
+const apiUrl = process.env.API_URL || 'http://localhost:1337';
 const strapi = new Strapi(apiUrl);
 
 class Vendors extends Component {
-    /*state = {
-        application: [],
-        submissions: [],
-        loadingItems: true,
-        EditorState,
-        ContentState
-    }*/
 
     constructor(props) {
         super(props);
@@ -41,7 +35,9 @@ class Vendors extends Component {
                 loadingItems: true,
                 editorState,
                 uploadedImages: [],
-                html
+                html,
+                errorMessage: false,
+                successMessage: false
             }
             this._uploadImageCallBack = this._uploadImageCallBack.bind(this);
         }
@@ -49,7 +45,6 @@ class Vendors extends Component {
 
     async componentDidMount() {
         try {
-            //console.log(this.props.match.params.itemId);
             let response = await strapi.request('POST', '/graphql', {
             data: {
                 query: `query {
@@ -57,12 +52,6 @@ class Vendors extends Component {
                     _id
                     name
                     howto
-                    mods {
-                        _id
-                        title
-                        moddetails
-                        trackerid
-                    }
                     submissions {
                         _id
                         file
@@ -105,13 +94,13 @@ class Vendors extends Component {
         }
     }
 
-    saveChanges = () => {
+    saveChanges = async () => {
         try {
             let { html, application } = this.state;
             html = html.replace(/"/g, '\'\'\'');
             html = html.replace(/\\/g, '----')
             console.log(html);
-            strapi.request('POST', 'graphql', {
+            await strapi.request('POST', 'graphql', {
                 data: {
                     query: `mutation {
                         updateApplication(input: {
@@ -129,8 +118,16 @@ class Vendors extends Component {
                       }`
                 }
             });
+            this.setState({
+                successMessage: true
+            })
+            setTimeout(() => {this.setState({ successMessage: false })}, 3000);
             }catch (err) {
                 console.log(err);
+                this.setState({
+                    errorMessage: true
+                });
+                setTimeout(() => {this.setState({ errorMessage: false })}, 3000);
             }
         }
 
@@ -139,22 +136,6 @@ class Vendors extends Component {
             editorState,
             html: draftToHtml(convertToRaw(editorState.getCurrentContent())).replace(/[\n]/g, '')
         });
-    }
-
-    renderMods() {
-        let { application } = this.state;
-        return (
-            <div>
-                {application.mods.map(a => {
-                    return (
-                        <p>
-                            <strong>{a.title} | {a.trackerid}</strong><br />
-                            {a.moddetails}
-                        </p>
-                    )
-                })}
-            </div>
-        );
     }
 
     renderDropDown1() {
@@ -212,7 +193,7 @@ class Vendors extends Component {
 
 
     render() {
-        let { loadingItems, application, submissions, editorState } = this.state;
+        let { loadingItems, application, submissions, editorState, successMessage, errorMessage } = this.state;
         console.log(this.state);
         return(
             <Container>
@@ -256,25 +237,24 @@ class Vendors extends Component {
                                     )
                                 })}
                             </Collapsible>
-                            <Collapsible
-                            transitionTime="250"
-                            trigger={this.renderDropDown2()}
-                            triggerWhenOpen={this.renderHide()}
-                            >
-                            {this.renderMods()}
-                            </Collapsible>
-                            <Editor 
-                            editorState={editorState}
-                            onEditorStateChange={this.onEditorStateChange}
-                            toolbar={{
-                                image: { uploadCallback: this._uploadImageCallBack },
-                                inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,application/pdf,text/plain,application/vnd.openxmlformatsofficedocument.wordprocessingml.document,application/msword,application/vnd.ms-excel'
-                              }}
-                            />
-                    <button style={{backgroundColor: 'black',color: 'green', borderRadius: '20px'}} onClick={this.saveChanges}>Save</button>
                         </p>
                     )
                 })}
+                <Editor 
+                    editorState={editorState}
+                    onEditorStateChange={this.onEditorStateChange}
+                    toolbar={{
+                        image: { uploadCallback: this._uploadImageCallBack },
+                        inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,application/pdf,text/plain,application/vnd.openxmlformatsofficedocument.wordprocessingml.document,application/msword,application/vnd.ms-excel'
+                        }}
+                    />
+                <button style={{backgroundColor: 'black',color: 'green', borderRadius: '20px'}} onClick={this.saveChanges}>Save</button> <br />
+                {successMessage && 
+                <Alert color='success'>Successfully Saved!</Alert>
+                }
+                {errorMessage &&
+                <Alert color='danger' style={{padding: '20px'}}>There was an issue saving to database</Alert>
+                }
                 </Box>
             </Box>
             </Box>
