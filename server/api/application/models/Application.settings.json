@@ -26,10 +26,6 @@
       "model": "vendors",
       "via": "applications"
     },
-    "versions": {
-      "collection": "versions",
-      "via": "application"
-    },
     "jurisdictions": {
       "collection": "jurisdictions",
       "via": "application"
@@ -47,6 +43,10 @@
     "approvalstatuses": {
       "collection": "approvalstatus",
       "via": "applications"
+    },
+    "versions": {
+      "collection": "versions",
+      "via": "application"
     },
     "mods": {
       "collection": "mods",

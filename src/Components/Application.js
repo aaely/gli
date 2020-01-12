@@ -58,13 +58,13 @@ class Vendors extends Component {
                         versions {
                             _id
                             version
-                        }
-                        jurisdictions {
-                            _id
-                            jurisdiction
-                            approvalstatuses {
+                            jurisdictions {
                                 _id
                                 status
+                                jurisdictions {
+                                    _id
+                                    jurisdiction
+                                }
                             }
                         }
                     }
@@ -212,7 +212,7 @@ class Vendors extends Component {
                 <Box marginBottom={5}>
                     <Heading color="blue">{application.name}</Heading>
                     <h3><strong>Submissions:</strong></h3>
-                {submissions.map(a => {
+                {/*submissions.map(a => {
                     return (
                         <p>
                             <Link to={`/submission/${a._id}`}>{a.file}</Link> <br />
@@ -227,19 +227,29 @@ class Vendors extends Component {
                             trigger={this.renderDropDown1()}
                             triggerWhenOpen={this.renderHide()}
                             >
-                                {a.jurisdictions.map(c => {
-                                return (
-                                    <p>{c.jurisdiction} -- Status: {c.approvalstatuses.map(d => {
-                                        return (
-                                            <span>{d.status}</span>
+                                {a.versions.map(v => {
+                                    v.approvalstatuses.map(d => {
+                                        return(
+                                            <p>{c.jurisdiction} -- Status: {d.approvalstatuses.map(d => {
+                                                return(
+                                                    <span>
+                                                {d.status}</span>
+                                                )})}   </p>
                                         )
-                                        })}   </p>
-                                    )
-                                })}
+                                    })
+                                    return(<p>
+                                    {v.jurisdictions.map(c => {
+                                        return (
+                                            <span>{c.jurisdiction}</span>
+                                            )
+                                        })}
+                                        )
+                                    })
+                                }
                             </Collapsible>
                         </p>
                     )
-                })}
+                })*/}
                 <Editor 
                     editorState={editorState}
                     onEditorStateChange={this.onEditorStateChange}

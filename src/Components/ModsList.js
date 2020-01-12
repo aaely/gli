@@ -52,17 +52,34 @@ class ModList extends Component {
                         jurisdiction
                       }
                       mods {
+                        _id
+                        modnumber
+                        title
+                        trackerid
+                        moddetails
+                        status
+                        jira
+                        testingzip {
+                            _id
+                            url
+                        }
+                    }
+                      versions {
                           _id
-                          modnumber
-                          title
-                          trackerid
-                          moddetails
-                          status
-                          jira
-                          testingzip {
-                              _id
-                              url
-                          }
+                          version
+                          mods {
+                            _id
+                            modnumber
+                            title
+                            trackerid
+                            moddetails
+                            status
+                            jira
+                            testingzip {
+                                _id
+                                url
+                            }
+                        }
                       }
                       application {
                           _id
@@ -73,25 +90,35 @@ class ModList extends Component {
             }
         }
         );
+        let getMods = response.data.submission.versions.map(a => {return a.mods});
+        let ModsList = [];
+        for (let i = 0; i < getMods.length; i++){
+            let j = 0;
+            while (j < getMods[i].length) {
+                ModsList.push(getMods[i][j])
+                j++
+            }
+        }
+        console.log(ModsList);
         this.setState({
             submission: response.data.submission.file,
             loadingItems: false,
-            mods: response.data.submission.mods,
+            mods: ModsList,
             application: response.data.submission.application,
-            modsCount: response.data.submission.mods.length,
-            auditModsCount: response.data.submission.mods.filter(prop => {
+            modsCount: ModsList.length,
+            auditModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('audit'.toLowerCase())
             }).length,
-            testableModsCount: response.data.submission.mods.filter(prop => {
+            testableModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('testable'.toLowerCase())
             }).length,
-            completeModsCount: response.data.submission.mods.filter(prop => {
+            completeModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('complete'.toLowerCase())
             }).length,
-            jiraModsCount: response.data.submission.mods.filter(prop => {
+            jiraModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('jira'.toLowerCase())
             }).length,
-            revokedModsCount: response.data.submission.mods.filter(prop => {
+            revokedModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('revoked'.toLowerCase())
             }).length
         });

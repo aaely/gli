@@ -238,11 +238,14 @@ class Submission extends Component {
             <div style={{textAlign: 'center'}}>
                 <h1 style={{textAlign: 'center'}}>{submission}</h1>
                 <Link to={`/manufacturer/${vendorId}`}><h3 style={{textAlign: 'center'}}>{vendor}</h3></Link><br />
-                <h1 style={{textAlign: 'center'}}><Link to={`/application/${application._id}`}>{application.name} {versions.map(y => {
+                <Link to={`/modrewrites/${this.props.match.params.submissionId}`}><h3 style={{textAlign: 'center'}}>Mod Rewrites</h3></Link><br />
+                <h1 style={{textAlign: 'center'}}><Link to={`/application/${application._id}`}>{application.name} </Link></h1>
+                <h3 style={{textAlign: 'center'}}>Versions:</h3>
+                {versions.map(y => {
                     return (
-                        <span>{y.version}</span>
+                        <span>| {y.version} |{'\u00A0'} </span>
                     )
-                })}</Link></h1>
+                })}
                 <Collapsible 
                 transitionTime="250" 
                 trigger={this.renderDropDown1()}
@@ -264,7 +267,7 @@ class Submission extends Component {
                 >
                     {this.renderURNs()}
                 </Collapsible>}
-                <MyPieChart submissionId={this.props.match.params.submissionId}/>
+                {loadingItems === false && <MyPieChart submissionId={this.props.match.params.submissionId}/>}
                 <ModsList submissionId={this.props.match.params.submissionId}/>
                 {loadingItems && <Loader />}
             </div>

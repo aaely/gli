@@ -35,10 +35,6 @@
       "model": "employees",
       "via": "mods"
     },
-    "versions": {
-      "collection": "versions",
-      "via": "mods"
-    },
     "submissions": {
       "collection": "submissions",
       "via": "mods",
@@ -75,6 +71,11 @@
       "model": "file",
       "via": "related",
       "plugin": "upload"
+    },
+    "versions": {
+      "collection": "versions",
+      "via": "mods",
+      "dominant": true
     }
   }
 }

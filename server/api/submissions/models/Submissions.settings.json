@@ -56,10 +56,6 @@
       "via": "related",
       "plugin": "upload"
     },
-    "versions": {
-      "collection": "versions",
-      "via": "submission"
-    },
     "jurisdictions": {
       "collection": "jurisdictions",
       "via": "submissions"
@@ -70,6 +66,10 @@
     },
     "approvalstatuses": {
       "collection": "approvalstatus",
+      "via": "submissions"
+    },
+    "versions": {
+      "collection": "versions",
       "via": "submissions"
     },
     "mods": {

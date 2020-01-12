@@ -117,7 +117,9 @@ class NewMod extends Component {
     }
 
     handleTrackerID = (event) => {
-        
+        this.setState({
+            trackerid: event.target.value
+        });
     }
 
 

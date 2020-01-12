@@ -15,9 +15,10 @@
     "version": {
       "type": "string"
     },
-    "submission": {
-      "model": "submissions",
-      "via": "versions"
+    "submissions": {
+      "collection": "submissions",
+      "via": "versions",
+      "dominant": true
     },
     "application": {
       "model": "application",
@@ -29,7 +30,6 @@
     },
     "mods": {
       "collection": "mods",
-      "dominant": true,
       "via": "versions"
     }
   }

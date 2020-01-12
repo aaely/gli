@@ -12,11 +12,6 @@
     ]
   },
   "attributes": {
-    "versions": {
-      "collection": "versions",
-      "via": "approvalstatuses",
-      "dominant": true
-    },
     "jurisdictions": {
       "collection": "jurisdictions",
       "via": "approvalstatuses",
@@ -41,6 +36,11 @@
       "collection": "application",
       "via": "approvalstatuses",
       "dominant": true
+    },
+    "versions": {
+      "collection": "versions",
+      "dominant": true,
+      "via": "approvalstatuses"
     }
   }
 }

@@ -28,6 +28,7 @@
     "react-spinners": "^0.4.8",
     "reactstrap": "^8.1.1",
     "recharts": "^2.0.0-beta.1",
+    "socket.io": "^2.3.0",
     "strapi-sdk-javascript": "^0.3.3"
   },
   "scripts": {

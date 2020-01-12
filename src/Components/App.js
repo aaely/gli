@@ -14,6 +14,7 @@ import Vendors from './Vendors';
 import Appwiki from './Appwiki';
 import UpdateMod from './UpdateMod';
 import NewMod from './NewMod';
+import ModRewrites from './ModRewrites';
 
 class App extends Component {
   render() {
@@ -33,6 +34,7 @@ class App extends Component {
           <Route component={Vendors} path="/manufacturer/:vendorId" />
           <Route component={NewMod} path="/newmod/:submissionId" />
           <Route component={UpdateMod} path="/updatemod/:modId" />
+          <Route component={ModRewrites} path="/modrewrites/:submissionId" />
         </Switch>
         </React.Fragment>
       </Router>
