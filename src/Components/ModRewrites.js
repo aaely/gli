@@ -44,7 +44,6 @@ class ModRewrites extends Component {
 
     render() {
         let { versions } = this.state;
-        let start = 1;
         console.log(versions);
         return(
             <div>

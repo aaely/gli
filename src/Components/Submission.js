@@ -86,6 +86,7 @@ class Submission extends Component {
                           moddetails
                           status
                           jira
+                          teststeps
                           testingzip {
                               _id
                               url
