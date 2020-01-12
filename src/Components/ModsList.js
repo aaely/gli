@@ -90,7 +90,7 @@ class ModList extends Component {
             }
         }
         );
-        let getMods = response.data.submission.versions.map(a => {return a.mods});
+        let getMods = response.data.submission.versions.map(a => {return a.mods.sort((a, b) => (a.modnumber - b.modnumber))});
         let ModsList = [];
         for (let i = 0; i < getMods.length; i++){
             let j = 0;

@@ -72,30 +72,43 @@ class MyPieChart extends Component {
             data: {
                 query: `query {
                     submission (id : "${this.props.submissionId}") {
-                      mods {
+                      versions {
                           _id
-                          status
+                          version
+                          mods {
+                              _id
+                              status
+                          }
                       }
                   }
                 }`
             }
         }
         );
+        let getMods = response.data.submission.versions.map(a => {return a.mods});
+        let ModsList = [];
+        for (let i = 0; i < getMods.length; i++) {
+            let j = 0;
+            while (j < getMods[i].length) {
+                ModsList.push(getMods[i][j]);
+                j++;
+            }
+        }
         this.setState({
             loadingItems: false,
-            auditModsCount: response.data.submission.mods.filter(prop => {
+            auditModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('audit'.toLowerCase())
             }).length,
-            testableModsCount: response.data.submission.mods.filter(prop => {
+            testableModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('testable'.toLowerCase())
             }).length,
-            completeModsCount: response.data.submission.mods.filter(prop => {
+            completeModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('complete'.toLowerCase())
             }).length,
-            jiraModsCount: response.data.submission.mods.filter(prop => {
+            jiraModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('jira'.toLowerCase())
             }).length,
-            revokedModsCount: response.data.submission.mods.filter(prop => {
+            revokedModsCount: ModsList.filter(prop => {
                 return prop.status.toLowerCase().includes('revoked'.toLowerCase())
             }).length
         });

@@ -27,7 +27,8 @@ class NewMod extends Component {
                 teststeps: '',
                 trackerid: '',
                 successMessage: false,
-                errorMessage: false
+                errorMessage: false,
+                rewrite: []
             }
             this._uploadImageCallBack = this._uploadImageCallBack.bind(this);
         }
@@ -45,6 +46,7 @@ class NewMod extends Component {
                         moddetails
                         trackerid
                         teststeps
+                        rewrite
                         application {
                             _id
                             name
@@ -66,7 +68,9 @@ class NewMod extends Component {
             moddetails: response.data.mod.moddetails,
             teststeps: response.data.mod.teststeps,
             title: response.data.mod.title,
-            loadingItems: false
+            loadingItems: false,
+            status: response.data.mod.status,
+            rewrite: response.data.mod.rewrite
         });
         if (this.state.moddetails === null && this.state.teststeps !== null){
             this.setState({ moddetails: '<p>Input text here</p>'});}
@@ -96,7 +100,7 @@ class NewMod extends Component {
 
     saveChanges =  async () => {
         try {
-            let { application, submission, moddetails, teststeps, trackerid, title, status, errorMessage, successMessage } = this.state;
+            let { rewrite, application, submission, moddetails, teststeps, trackerid, title, status, errorMessage, successMessage } = this.state;
             moddetails = moddetails.replace(/"/g, '\'\'\'');
             moddetails = moddetails.replace(/\\/g, '----');
             teststeps = teststeps.replace(/"/g, '\'\'\'');
@@ -114,6 +118,7 @@ class NewMod extends Component {
                             trackerid: "${trackerid}"
                             title: "${title}"
                             status: ${status}
+                            rewrite: "${rewrite}"
                           }
                         }) {
                           mod {
@@ -197,6 +202,12 @@ class NewMod extends Component {
         })
     }
 
+    handleRewrite = (event) => {
+        this.setState({
+            rewrite: event.target.value
+        })
+    }
+
 
     onModDetailsStateChange = (editorState) => {
         this.setState({
@@ -213,7 +224,7 @@ class NewMod extends Component {
     }
 
     render() {
-        let { loadingItems, application, submission, editorState, editorState1, trackerid, title, status, errorMessage, successMessage } = this.state;
+        let { rewrite, loadingItems, application, submission, editorState, editorState1, trackerid, title, status, errorMessage, successMessage } = this.state;
         console.log(this.state);
         return(
             <Form style={{marginLeft: '10px', marginRight: '10px', marginTop: '20px'}}>
@@ -264,6 +275,12 @@ class NewMod extends Component {
                                 inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,application/pdf,text/plain,application/vnd.openxmlformatsofficedocument.wordprocessingml.document,application/msword,application/vnd.ms-excel'
                               }}
                         />
+                </FormGroup>
+                <FormGroup row>
+                    <Label for="rewrite" sm={2}>Rewrite</Label>
+                    <Col sm={10}>
+                        <Input type="textarea" name="rewrite" id="rewrite" value={rewrite} onChange={this.handleRewrite}/>
+                    </Col>
                 </FormGroup>
                 <FormGroup check row>
                     <Col sm={{ size: 10, offset: 2 }}>
