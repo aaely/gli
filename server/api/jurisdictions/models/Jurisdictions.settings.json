@@ -18,17 +18,17 @@
     "number": {
       "type": "integer"
     },
-    "submissions": {
-      "collection": "submissions",
-      "dominant": true,
-      "via": "jurisdictions"
-    },
     "application": {
       "model": "application",
       "via": "jurisdictions"
     },
     "approvalstatuses": {
       "collection": "approvalstatus",
+      "via": "jurisdictions"
+    },
+    "submissions": {
+      "collection": "submissions",
+      "dominant": true,
       "via": "jurisdictions"
     }
   }

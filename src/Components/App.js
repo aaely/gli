@@ -12,16 +12,22 @@ import Jurisdictions from './Jurisdictions';
 import Application from './Application';
 import Vendors from './Vendors';
 import Appwiki from './Appwiki';
+import ModTestPlan from './ModTestPlan';
+import Newmod from './Newmod';
 import UpdateMod from './UpdateMod';
-import NewMod from './NewMod';
-import ModRewrites from './ModRewrites';
+import ReWrites from './ReWrites';
+import NewSubmission from './NewSubmission';
+import NewSub from './NewSub';
+import ReactstrapNav from './ReactstrapNav';
+import WebsocketTest from './test';
 
 class App extends Component {
   render() {
     return (
       <Router>
         <React.Fragment>
-        <Navbar />
+        {/*<Navbar />*/}
+        <ReactstrapNav />
         <Switch>
           <Route component={Dashboard} exact path="/" />
           <Route component={Submission} path="/submission/:submissionId" />
@@ -31,10 +37,14 @@ class App extends Component {
           <Route component={Application} path="/application/:applicationId" />
           <Route component={Appwiki} path="/application/:applicationId/howto" />
           <Route component={Apps} path="/manufacturers" />
+          <Route component={ReWrites} path="/rewrites/:submissionId" />
           <Route component={Vendors} path="/manufacturer/:vendorId" />
-          <Route component={NewMod} path="/newmod/:submissionId" />
+          <Route component={Newmod} path="/newmod/:submissionId" />
           <Route component={UpdateMod} path="/updatemod/:modId" />
-          <Route component={ModRewrites} path="/modrewrites/:submissionId" />
+          <Route component={ModTestPlan} path="/modtestplan/:submissionId" />
+          <Route component={NewSubmission} path="/newsubmission/:applicationId" />
+          <Route component={NewSub} path="/newsubmission" />
+          <Route component={WebsocketTest} path="/test" />
         </Switch>
         </React.Fragment>
       </Router>

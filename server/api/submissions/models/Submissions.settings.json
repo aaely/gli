@@ -68,6 +68,20 @@
       "collection": "approvalstatus",
       "via": "submissions"
     },
+    "employees": {
+      "collection": "employees",
+      "via": "submissions",
+      "dominant": true
+    },
+    "previousversion": {
+      "type": "string"
+    },
+    "previousfile": {
+      "type": "string"
+    },
+    "packageurl": {
+      "type": "string"
+    },
     "versions": {
       "collection": "versions",
       "via": "submissions"

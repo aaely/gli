@@ -15,11 +15,6 @@
     "version": {
       "type": "string"
     },
-    "submissions": {
-      "collection": "submissions",
-      "via": "versions",
-      "dominant": true
-    },
     "application": {
       "model": "application",
       "via": "versions"
@@ -28,8 +23,14 @@
       "collection": "approvalstatus",
       "via": "versions"
     },
+    "submissions": {
+      "collection": "submissions",
+      "via": "versions",
+      "dominant": true
+    },
     "mods": {
       "collection": "mods",
+      "dominant": true,
       "via": "versions"
     }
   }

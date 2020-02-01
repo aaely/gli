@@ -16,11 +16,17 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
 import draftToHtml from 'draftjs-to-html';
-import { Alert } from 'reactstrap';
-const apiUrl = process.env.API_URL || 'http://localhost:1337';
+const apiUrl = process.env.API_URL || 'http://192.168.0.248:1337';
 const strapi = new Strapi(apiUrl);
 
 class Vendors extends Component {
+    /*state = {
+        application: [],
+        submissions: [],
+        loadingItems: true,
+        EditorState,
+        ContentState
+    }*/
 
     constructor(props) {
         super(props);
@@ -35,9 +41,7 @@ class Vendors extends Component {
                 loadingItems: true,
                 editorState,
                 uploadedImages: [],
-                html,
-                errorMessage: false,
-                successMessage: false
+                html
             }
             this._uploadImageCallBack = this._uploadImageCallBack.bind(this);
         }
@@ -45,6 +49,7 @@ class Vendors extends Component {
 
     async componentDidMount() {
         try {
+            //console.log(this.props.match.params.itemId);
             let response = await strapi.request('POST', '/graphql', {
             data: {
                 query: `query {
@@ -58,13 +63,13 @@ class Vendors extends Component {
                         versions {
                             _id
                             version
-                            jurisdictions {
+                        }
+                        jurisdictions {
+                            _id
+                            jurisdiction
+                            approvalstatuses {
                                 _id
                                 status
-                                jurisdictions {
-                                    _id
-                                    jurisdiction
-                                }
                             }
                         }
                     }
@@ -118,16 +123,8 @@ class Vendors extends Component {
                       }`
                 }
             });
-            this.setState({
-                successMessage: true
-            })
-            setTimeout(() => {this.setState({ successMessage: false })}, 3000);
             }catch (err) {
                 console.log(err);
-                this.setState({
-                    errorMessage: true
-                });
-                setTimeout(() => {this.setState({ errorMessage: false })}, 3000);
             }
         }
 
@@ -193,7 +190,7 @@ class Vendors extends Component {
 
 
     render() {
-        let { loadingItems, application, submissions, editorState, successMessage, errorMessage } = this.state;
+        let { loadingItems, application, submissions, editorState } = this.state;
         console.log(this.state);
         return(
             <Container>
@@ -212,7 +209,12 @@ class Vendors extends Component {
                 <Box marginBottom={5}>
                     <Heading color="blue">{application.name}</Heading>
                     <h3><strong>Submissions:</strong></h3>
-                {/*submissions.map(a => {
+                        <div className="fixed-action-btn">
+                            <Link style={{backgroundColor: '#333', marginRight: '20px'}} className="btn-floating btn-large right" to={`/newsubmission/${this.props.match.params.applicationId}`}>
+                                <i className="material-icons" style={{color: 'hsl(128, 100%, 50%)'}}>add</i>
+                            </Link>
+                        </div>
+                {submissions.map(a => {
                     return (
                         <p>
                             <Link to={`/submission/${a._id}`}>{a.file}</Link> <br />
@@ -227,44 +229,28 @@ class Vendors extends Component {
                             trigger={this.renderDropDown1()}
                             triggerWhenOpen={this.renderHide()}
                             >
-                                {a.versions.map(v => {
-                                    v.approvalstatuses.map(d => {
-                                        return(
-                                            <p>{c.jurisdiction} -- Status: {d.approvalstatuses.map(d => {
-                                                return(
-                                                    <span>
-                                                {d.status}</span>
-                                                )})}   </p>
-                                        )
-                                    })
-                                    return(<p>
-                                    {v.jurisdictions.map(c => {
+                                {a.jurisdictions.map(c => {
+                                return (
+                                    <p>{c.jurisdiction} -- Status: {c.approvalstatuses.map(d => {
                                         return (
-                                            <span>{c.jurisdiction}</span>
-                                            )
-                                        })}
+                                            <span>{d.status}</span>
                                         )
-                                    })
-                                }
+                                        })}   </p>
+                                    )
+                                })}
                             </Collapsible>
                         </p>
                     )
-                })*/}
+                })}
                 <Editor 
-                    editorState={editorState}
-                    onEditorStateChange={this.onEditorStateChange}
-                    toolbar={{
-                        image: { uploadCallback: this._uploadImageCallBack },
-                        inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,application/pdf,text/plain,application/vnd.openxmlformatsofficedocument.wordprocessingml.document,application/msword,application/vnd.ms-excel'
-                        }}
-                    />
-                <button style={{backgroundColor: 'black',color: 'green', borderRadius: '20px'}} onClick={this.saveChanges}>Save</button> <br />
-                {successMessage && 
-                <Alert color='success'>Successfully Saved!</Alert>
-                }
-                {errorMessage &&
-                <Alert color='danger' style={{padding: '20px'}}>There was an issue saving to database</Alert>
-                }
+                editorState={editorState}
+                onEditorStateChange={this.onEditorStateChange}
+                toolbar={{
+                    image: { uploadCallback: this._uploadImageCallBack },
+                    inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg,application/pdf,text/plain,application/vnd.openxmlformatsofficedocument.wordprocessingml.document,application/msword,application/vnd.ms-excel'
+                    }}
+                />
+                    <button style={{backgroundColor: 'black',color: 'green', borderRadius: '20px'}} onClick={this.saveChanges}>Save</button>
                 </Box>
             </Box>
             </Box>

@@ -1,31 +1,21 @@
 import React, { Component } from 'react';
-import Test from './propstest';
+import { PieChart, Pie, Legend, Sector, Cell } from 'recharts';
+import { Button } from 'reactstrap';
+import Collapsible from 'react-collapsible';
+import ModList from './ModList';
+import MyPieChart from './MyPieChart';
 import { Link } from 'react-router-dom';
 import Strapi from 'strapi-sdk-javascript/build/main';
 import Loader from './Loader';
-import MyPieChart from './PieChart';
-import { FaRegEdit } from 'react-icons/fa';
 import { pdfjs, Document, Page, View } from 'react-pdf';
-import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
-import htmlToDraft from 'html-to-draftjs';
-import draftToHtml from 'draftjs-to-html';
-import Collapsible from 'react-collapsible';
-import ModsList from './ModsList';
-import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-const apiUrl = process.env.API_URL || 'http://localhost:1337';
-const strapi = new Strapi(apiUrl);
+const apiUrl = process.env.API_URL || 'http://192.168.0.248:1337';
+const strapi = new Strapi(apiUrl);   
 
 class Submission extends Component {
 
     constructor(props) {
         super(props);
-        let html = '<p>Testing 1234 😀</p>';
-        let contentBlock = htmlToDraft(html);
-        if (contentBlock) {
-            let contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-            let editorState = EditorState.createWithContent(contentState);
             this.state = {
                 loadingItems: true,
                 submission: '',
@@ -35,22 +25,20 @@ class Submission extends Component {
                 numPages: null,
                 pageNumber: 1,
                 urns: [],
-                mods: [],
                 application: [],
                 versions: [],
-                html: '',
-                editorState,
                 uploadedImages: [],
-                auditModsCount: 0,
-                modsCount: 0,
+                excelsheet: [],
+                packageurl: '',
                 testableModsCount: 0,
                 completeModsCount: 0,
                 jiraModsCount: 0,
+                questionableModsCount: 0,
                 revokedModsCount: 0,
+                auditModsCount: 0,
                 activeIndex: 0
             }
         }
-    }
 
     async componentDidMount() {
         try {
@@ -62,6 +50,11 @@ class Submission extends Component {
                         received
                         processed
                         begin
+                        packageurl
+                        modtestplan {
+                            _id
+                            url
+                        }
                         vendor {
                         _id
                         name
@@ -78,20 +71,6 @@ class Submission extends Component {
                           _id
                           url
                       }
-                      mods {
-                          _id
-                          modnumber
-                          title
-                          trackerid
-                          moddetails
-                          status
-                          jira
-                          teststeps
-                          testingzip {
-                              _id
-                              url
-                          }
-                      }
                       application {
                           _id
                           name
@@ -99,14 +78,30 @@ class Submission extends Component {
                       versions {
                           _id
                           version
+                          mods {
+                            _id
+                            status
+                            isaudit
+                        }
                       }
                   }
                 }`
             }
         }
         );
+        let getMods = response.data.submission.versions.map(a => {return a.mods.sort((a, b) => (a.modnumber - b.modnumber))});
+        let ModsList = [];
+        for (let i = 0; i < getMods.length; i++){
+            let j = 0;
+            while (j < getMods[i].length) {
+                ModsList.push(getMods[i][j])
+                j++
+            }
+        }
         this.setState({
             submission: response.data.submission.file,
+            packageurl: response.data.submission.packageurl,
+            excelsheet: response.data.submission.modtestplan,
             vendor: response.data.submission.vendor.name,
             jurisdictions: response.data.submission.jurisdictions,
             loadingItems: false,
@@ -114,19 +109,30 @@ class Submission extends Component {
             urns: response.data.submission.urns,
             application: response.data.submission.application,
             versions: response.data.submission.versions,
+            modsCount: ModsList.length,
+            auditModsCount: ModsList.filter(prop => {
+                return prop.isaudit === true
+            }).length,
+            testableModsCount: ModsList.filter(prop => {
+                return prop.status.toLowerCase().includes('testable'.toLowerCase())
+            }).length,
+            completeModsCount: ModsList.filter(prop => {
+                return prop.status.toLowerCase().includes('complete'.toLowerCase())
+            }).length,
+            jiraModsCount: ModsList.filter(prop => {
+                return prop.status.toLowerCase().includes('jira'.toLowerCase())
+            }).length,
+            questionableModsCount: ModsList.filter(prop => {
+                return prop.status.toLowerCase().includes('questionable'.toLowerCase())
+            }).length,
+            revokedModsCount: ModsList.filter(prop => {
+                return prop.status.toLowerCase().includes('revoked'.toLowerCase())
+            }).length
         });
-        console.log(this.state);
         }catch (err) {
             console.log(err);
             this.setState({ loadingItems: false });
         }
-    }
-
-    onEditorStateChange = (editorState) => {
-        this.setState({
-            editorState,
-            html: draftToHtml(convertToRaw(editorState.getCurrentContent())).replace(/[\n]/g, '')
-        });
     }
 
     renderDropDown1() {
@@ -145,15 +151,6 @@ class Submission extends Component {
         );
     }
 
-    renderDropDown3() {
-        let { modsCount } = this.state;
-        return (
-            <span className="trigger">
-                Mods:  ({modsCount})
-            </span>
-        );
-    }
-
     renderHide() {
         return (
             <span className="trigger">
@@ -162,25 +159,24 @@ class Submission extends Component {
         );
     }
 
-
     onDocumentLoadSuccess = ({ numPages }) => {
         this.setState({ numPages });
       }
 
-      changePage = offset => this.setState(prevState => ({
+    changePage = offset => this.setState(prevState => ({
         pageNumber: prevState.pageNumber + offset,
       }));
     
-      previousPage = () => this.changePage(-1);
+    previousPage = () => this.changePage(-1);
     
-      nextPage = () => this.changePage(1);
+    nextPage = () => this.changePage(1);
 
-      tableOfContents = () => this.setState({ pageNumber: 4});
+    tableOfContents = () => this.setState({ pageNumber: 4});
 
-      onItemClick = ({ pageNumber }) => this.setState({ pageNumber: pageNumber });
+    onItemClick = ({ pageNumber }) => this.setState({ pageNumber: pageNumber });
 
       //removes the offset of text from the rendered PDF file
-      removeTextLayerOffset = () => {
+    removeTextLayerOffset = () => {
         const textLayers = document.querySelectorAll(".react-pdf__Page__textContent");
           textLayers.forEach(layer => {
             const { style } = layer;
@@ -190,7 +186,7 @@ class Submission extends Component {
         });
       }
 
-      renderURNs = () => {
+    renderURNs = () => {
           let { urns, pageNumber, numPages } = this.state;
           return (
             <div>
@@ -234,21 +230,36 @@ class Submission extends Component {
       }
     
     render() {
-        let { urns, submission, vendor, jurisdictions, loadingItems, vendorId, application, versions } = this.state;
+        let { packageurl, submission, vendor, jurisdictions, loadingItems, vendorId, application, versions, auditModsCount, modsCount, jiraModsCount, testableModsCount, completeModsCount, revokedModsCount, questionableModsCount } = this.state;
         return(
             <div style={{textAlign: 'center'}}>
                 <h1 style={{textAlign: 'center'}}>{submission}</h1>
-                <Link to={`/manufacturer/${vendorId}`}><h3 style={{textAlign: 'center'}}>{vendor}</h3></Link><br />
-                <Link to={`/modrewrites/${this.props.match.params.submissionId}`}><h3 style={{textAlign: 'center'}}>Mod Rewrites</h3></Link><br />
-                <h1 style={{textAlign: 'center'}}><Link to={`/application/${application._id}`}>{application.name} </Link></h1>
-                <h3 style={{textAlign: 'center'}}>Versions:</h3>
+                <h3 style={{textAlign: 'center'}}><Link to={`/manufacturer/${vendorId}`}>{vendor}</Link></h3><br />
+                <h1 style={{textAlign: 'center'}}><Link to={`/application/${application._id}`}>{application.name}</Link></h1><br />
+                <h5 style={{textAlign: 'center'}}><strong><u>Versions attached to this submission:</u></strong></h5>
                 {versions.map(y => {
                     return (
-                        <span>| {y.version} |{'\u00A0'} </span>
+                        <p>{y.version}</p>
                     )
                 })}
+                <h5><Link to={`/modtestplan/${this.props.match.params.submissionId}`}>Mod Test Plan</Link></h5>
+                <h5><Link to={`/rewrites/${this.props.match.params.submissionId}`}>ReWrites</Link></h5>
+                {packageurl != null &&
+                <Link to={packageurl}>DM Flash</Link>
+                }
+                {loadingItems === false &&
+                    <MyPieChart 
+                    submissionId={this.props.match.params.submissionId}
+                    modsCount={modsCount}
+                    auditModsCount={auditModsCount}
+                    completeModsCount={completeModsCount}
+                    jiraModsCount={jiraModsCount}
+                    questionableModsCount={questionableModsCount}
+                    revokedModsCount={revokedModsCount}
+                    testableModsCount={testableModsCount}
+                    />}
                 <Collapsible 
-                transitionTime="250" 
+                transitionTime={250} 
                 trigger={this.renderDropDown1()}
                 triggerWhenOpen={this.renderHide()}
                 >
@@ -260,16 +271,24 @@ class Submission extends Component {
                     );
                 })}
                 </Collapsible>
-                {urns.length > 0 && 
-                <Collapsible 
-                transitionTime="250" 
-                trigger={this.renderDropDown2()}
-                triggerWhenOpen={this.renderHide()}
+                {/*<Collapsible
+                transitionTime={250}
+                trigger={<span className='trigger'>URNs:</span>}
                 >
-                    {this.renderURNs()}
-                </Collapsible>}
-                {loadingItems === false && <MyPieChart submissionId={this.props.match.params.submissionId}/>}
-                <ModsList submissionId={this.props.match.params.submissionId}/>
+                {this.renderURNs()}
+                </Collapsible>*/}
+                {loadingItems === false &&
+                <ModList 
+                submissionId={this.props.match.params.submissionId}
+                modsCount={modsCount}
+                auditModsCount={auditModsCount}
+                completeModsCount={completeModsCount}
+                jiraModsCount={jiraModsCount}
+                questionableModsCount={questionableModsCount}
+                revokedModsCount={revokedModsCount}
+                testableModsCount={testableModsCount}
+                history={this.props.history}
+                />}
                 {loadingItems && <Loader />}
             </div>
         );

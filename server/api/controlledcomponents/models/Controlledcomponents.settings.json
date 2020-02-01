@@ -1,0 +1,26 @@
+{
+  "connection": "default",
+  "collectionName": "controlledcomponents",
+  "info": {
+    "name": "controlledcomponents",
+    "description": ""
+  },
+  "options": {
+    "timestamps": [
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  "attributes": {
+    "location": {
+      "type": "string"
+    },
+    "application": {
+      "model": "application",
+      "via": "controlledcomponents"
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}

@@ -11,7 +11,7 @@ import {Box,
         Button,
         Container } from 'gestalt';
 import Loader from './Loader';
-const apiUrl = process.env.API_URL || 'http://localhost:1337';
+const apiUrl = process.env.API_URL || 'http://192.168.0.248:1337';
 const strapi = new Strapi(apiUrl);
 
 class Manufacturers extends Component {
@@ -146,14 +146,19 @@ class Manufacturers extends Component {
                     </Box>
             </Container>*/}
             
-                    <Iframe url="http://njintranet5.gaminglabs.net/sites/engineering/LVSystems/wiki/Wiki%20Pages/Current%20Network%20Layout.aspx"
-                    width="100%"
-                    height="100%"
-                    id="myId"
-                    className="myClassname"
-                    display="initial"
-                    position="absolute"/>
-
+            <p style={{marginLeft: '20px'}}><h4>To clone this repo and run at your own pc, do the following:</h4>
+                <ol>
+                <li>Ensure <a href='https://gitforwindows.org/'>Git Bash</a> cli is installed and running</li>
+                <li>Ensure <a href='https://nodejs.org/en/download/'>NodeJS</a> is installed</li>
+                <li>Run the following commands in the git bash terminal <em>(be in the home directory-- c:\users\[username]</em>: <br /> <em>git clone https://github.com/aaely/gli.git</em> <br /> <em>cd gli</em> <br /> npm i <br /> npm start</li>
+                <li>Your default browser will open to the dashboard</li>
+                <li>It would be best to limit changes to the <strong>src</strong> items, and particularly the <strong>Components</strong></li>
+                <li>Ignore the <strong>server</strong> directory for now.</li>
+                </ol> <br />
+                <br />
+                <p style={{marginLeft: '20px'}}>Here is a link to the newest version of VSCode. I use this editor due to all the free extensions. <a href="https://code.visualstudio.com/download">VSCode</a></p>
+                <h4>Talk to me (Aaron E) to commit changes to the repo. Repeat this process to update the components to the latest version I have committed.<em> Doing this will cause you to lose changes you may have made that I did not commit</em>. Please, feel free to ask me anything about this.</h4>
+            </p>
             </div>
         );
     }

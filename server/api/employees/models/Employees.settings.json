@@ -32,6 +32,10 @@
       "model": "jobtitle",
       "via": "employee"
     },
+    "submissions": {
+      "collection": "submissions",
+      "via": "employees"
+    },
     "mods": {
       "collection": "mods",
       "via": "employee"

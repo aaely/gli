@@ -10,7 +10,7 @@ import {Box,
         Button,
         Container } from 'gestalt';
 import Loader from './Loader';
-const apiUrl = process.env.API_URL || 'http://localhost:1337';
+const apiUrl = process.env.API_URL || `http://192.168.0.248:1337`;
 const strapi = new Strapi(apiUrl);
 
 class Submissions extends Component {
@@ -31,6 +31,11 @@ class Submissions extends Component {
                             received
                             processed
                             begin
+                            employees {
+                                _id
+                                fname
+                                lname
+                            }
                             vendor {
                                 _id
                                 name
@@ -75,7 +80,7 @@ class Submissions extends Component {
 
     filteredItems = ({ searchTerm, submissions }) => {
         return submissions.filter(prop => {
-            return prop.file.toLowerCase().includes(searchTerm.toLowerCase()) || prop.application.name.toLowerCase().includes(searchTerm.toLowerCase())
+            return prop.file.toLowerCase().includes(searchTerm.toLowerCase()) || prop.application.name.toLowerCase().includes(searchTerm.toLowerCase());
         });
     };
 
@@ -88,7 +93,7 @@ class Submissions extends Component {
                 id="searchField" 
                 accessibilityLabel="Items search field" 
                 onChange={this.handleChange} 
-                placeholder="Search Subissions or Apps" 
+                placeholder="Search Submissions or Apps" 
                 value={searchTerm}
                 />
                 <Box
@@ -106,15 +111,20 @@ class Submissions extends Component {
                 justifyContent="around"
                 dangerouslySetInlineStyle={{
                     __style: {
-                        backgroundColor: '#d6e5ff'
+                        backgroundColor: '#ddd'
                     }
                 }}
                 shape= "rounded"
                 >
+                    <div className="fixed-action-btn">
+                        <Link style={{backgroundColor: '#333', marginRight: '20px'}} className="btn-floating btn-large right" to={`/newsubmission`}>
+                            <i className="material-icons" style={{color: 'hsl(128, 100%, 50%)'}}>add</i>
+                        </Link>
+                    </div>
             {this.filteredItems(this.state).map(sub => {
                 console.log(sub);
                 return(
-                    <div className="card" key={sub._id} style={{marginTop: '30px', width: '100%', display: 'inline-block', marginRight: '3px', marginLeft: '3px', display: 'inline-grid'}}>
+                    <div className="card" key={sub._id} style={{marginTop: '30px', width: '100%', display: 'inline-grid', marginRight: '3px', marginLeft: '3px'}}>
                     <div className="card-title" style={{textAlign: 'center'}}>{sub.file}</div>
                     <div className="card-image" style={{height: '50%', width: '50%'}}>
                         <Image src={`${apiUrl}${sub.vendor.logo.url}`} alt={`${sub.vendor.logo._id}`} className='coffeeimage' style={{width: '10%', height: '10%'}}/>
@@ -135,6 +145,13 @@ class Submissions extends Component {
                                 <span className="right" style={{color: 'yellow'}}>{a.version}</span>
                             )
                         })}</p>
+                        <p>
+                    Assigned Engineers: {sub.employees.map(a=> {
+                        return (
+                    <span className="right" style={{color: 'red'}}>{a.fname} {a.lname} {'\u00A0'}</span>
+                        )
+                    })}
+                        </p>
                     </div>
                     <div className="card-action" style={{textAlign: 'center', backgroundColor:'#686c72'}}>
                         <Link to={`/submission/${sub._id}`}>{sub.file}</Link>

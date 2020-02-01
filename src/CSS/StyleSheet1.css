@@ -32,7 +32,7 @@
   transition: -webkit-box-shadow .25s;
   transition: box-shadow .25s;
   transition: box-shadow .25s, -webkit-box-shadow .25s;
-  border-radius: 2px;
+  border-radius: 10px;
 }
 
 .card .card-title {
@@ -246,7 +246,7 @@
   height: 40px;
   line-height: 40px;
   padding: 0;
-  background-color: #26a69a;
+  background-color: #333;
   border-radius: 50%;
   -webkit-transition: .3s;
   transition: .3s;
@@ -255,7 +255,7 @@
 }
 
 .btn-floating:hover {
-  background-color: #26a69a;
+  background-color: #000000;
 }
 
 .btn-floating:before {
@@ -372,7 +372,7 @@ button.btn-floating {
   height: 40px;
   line-height: 40px;
   padding: 0;
-  background-color: #26a69a;
+  background-color: #333;
   border-radius: 50%;
   -webkit-transition: .3s;
   transition: .3s;
@@ -381,7 +381,7 @@ button.btn-floating {
 }
 
 .btn-floating:hover {
-  background-color: #26a69a;
+  background-color: #000000;
 }
 
 .btn-floating:before {
@@ -429,7 +429,7 @@ button.btn-floating {
 }
 
 .card .card-image img {
-  display: block;
+  display: inline-block;
   border-radius: 2px 2px 0 0;
   position: relative;
   left: 0;
@@ -459,7 +459,7 @@ button.btn-floating {
 }
 
 .card .card-content .card-title {
-  display: block;
+  display: inline-block;
   line-height: 32px;
   margin-bottom: 8px;
 }
@@ -506,7 +506,7 @@ button.btn-floating {
 
 .card .card-reveal .card-title {
   cursor: pointer;
-  display: block;
+  display: inline-block;
 }
 .container .row {
   margin-left: -0.75rem;
@@ -647,6 +647,12 @@ button.btn-floating {
   transition: opacity 10000ms ease-in;
 }
 
+.wrapperstyle {
+  border-style: 'solid';
+  border-width: '2px';
+  border-color: 'black';
+}
+
 @-webkit-keyframes rotating /* Safari and Chrome */ {
   from {
     -webkit-transform: rotate(0deg);
@@ -719,6 +725,21 @@ button.btn-floating {
   text-align: left;
 }
 
+.iconbutton {
+  position: relative; 
+  display: inline-block; 
+  padding: '5px';
+  background-color : #333; 
+  color: #333;
+  font-size: 20px;
+  border-style: solid; 
+  border-color: #333; 
+  border-width: 5px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
 .triggerHide {
   position: relative; 
   display: block; 
@@ -736,6 +757,11 @@ button.btn-floating {
 
 .trigger:hover {
   background-color: #000000;
+}
+
+.iconbutton:hover {
+  background-color: #000000;
+  color: #000000;
 }
 
 .triggerHide:hover {

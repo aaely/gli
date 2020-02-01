@@ -26,14 +26,13 @@ class Dashboard extends Component {
   render() {
     return (
       <div>
-        <p style={{ backgroundColor: 'black', color: 'green', textAlign: 'center'}}><h1><a href="http://njintranet5/sites/engineering/LVSystems/wiki/Wiki%20Pages/Current%20Network%20Layout.aspx">Network Layout</a></h1></p>
         <Nav tabs style={{backgroundColor: 'black', color: 'green', marginTop: '5px', marginBottom: '5px'}}>
           <NavItem>
             <NavLink
               className={classnames({ active: this.state.activeTab === '1' })}
               onClick={() => { this.toggle('1'); }}
             >
-              Manufacturer
+              Contribute
             </NavLink>
           </NavItem>
           <NavItem>

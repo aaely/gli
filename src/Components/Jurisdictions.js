@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Strapi from 'strapi-sdk-javascript/build/main';
 import Loader from './Loader';
-const apiUrl = process.env.API_URL || 'http://localhost:1337';
+const apiUrl = process.env.API_URL || 'http://192.168.0.248:1337';
 const strapi = new Strapi(apiUrl);
 
 class Jurisdictions extends Component {
@@ -67,7 +67,7 @@ class Jurisdictions extends Component {
                 {jurisdictions.map(a => {
                 return (<p>
                 <h1>{a.jurisdiction} ({a.number})</h1> <br />
-                <h3>Submissions for {a.jurisdiction}</h3>
+                <h3>Submissions: </h3>
                 {a.submissions.map(b => {
                     return (
                         <p>{b.file} <br />

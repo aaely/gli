@@ -33,10 +33,6 @@
     "howto": {
       "type": "text"
     },
-    "submissions": {
-      "collection": "submissions",
-      "via": "application"
-    },
     "systemdescription": {
       "type": "text"
     },
@@ -44,8 +40,16 @@
       "collection": "approvalstatus",
       "via": "applications"
     },
+    "submissions": {
+      "collection": "submissions",
+      "via": "application"
+    },
     "versions": {
       "collection": "versions",
+      "via": "application"
+    },
+    "controlledcomponents": {
+      "collection": "controlledcomponents",
       "via": "application"
     },
     "mods": {

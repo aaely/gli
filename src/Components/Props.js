@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Strapi from 'strapi-sdk-javascript/build/main';
 import Loader from './Loader';
-const apiUrl = process.env.API_URL || 'http://localhost:1337';
+const apiUrl = process.env.API_URL || 'http://192.168.0.248:1337';
 const strapi = new Strapi(apiUrl);
 
 class Props extends Component {

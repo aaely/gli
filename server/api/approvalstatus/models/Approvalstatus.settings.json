@@ -27,15 +27,15 @@
       ],
       "type": "enumeration"
     },
-    "submissions": {
-      "collection": "submissions",
-      "via": "approvalstatuses",
-      "dominant": true
-    },
     "applications": {
       "collection": "application",
       "via": "approvalstatuses",
       "dominant": true
+    },
+    "submissions": {
+      "collection": "submissions",
+      "dominant": true,
+      "via": "approvalstatuses"
     },
     "versions": {
       "collection": "versions",

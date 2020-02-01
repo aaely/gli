@@ -20,26 +20,19 @@
     },
     "status": {
       "enum": [
-        "default",
-        "Audit",
         "Testable",
         "JIRA",
-        "Saving for Last",
         "Complete",
         "Revoked",
         "Questionable"
       ],
       "type": "enumeration",
-      "required": true
+      "required": true,
+      "default": "Testable"
     },
     "employee": {
       "model": "employees",
       "via": "mods"
-    },
-    "submissions": {
-      "collection": "submissions",
-      "via": "mods",
-      "dominant": true
     },
     "jira": {
       "type": "string"
@@ -60,23 +53,39 @@
     "teststeps": {
       "type": "text"
     },
-    "testingperformed": {
-      "type": "text"
-    },
     "testingzip": {
       "model": "file",
       "via": "related",
       "plugin": "upload"
     },
-    "images": {
-      "model": "file",
-      "via": "related",
-      "plugin": "upload"
+    "versionaffected": {
+      "type": "string"
+    },
+    "sidenotes": {
+      "type": "string"
+    },
+    "datetested": {
+      "type": "date"
+    },
+    "submissions": {
+      "collection": "submissions",
+      "via": "mods",
+      "dominant": true
     },
     "versions": {
       "collection": "versions",
-      "via": "mods",
-      "dominant": true
+      "via": "mods"
+    },
+    "isaudit": {
+      "type": "boolean"
+    },
+    "results": {
+      "type": "string"
+    },
+    "images": {
+      "collection": "file",
+      "via": "related",
+      "plugin": "upload"
     }
   }
 }

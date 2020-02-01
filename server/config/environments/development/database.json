@@ -5,14 +5,14 @@
       "connector": "strapi-hook-mongoose",
       "settings": {
         "database": "emaily-dev",
-        "host": "ds231501.mlab.com",
+        "host": "localhost",
         "srv": false,
-        "port": "31501",
-        "username": "aaron",
-        "password": "password1"
+        "port": "27017",
+        "username": "admin",
+        "password": "admin"
       },
       "options": {
-        "authenticationDatabase": "emaily-dev"
+        "authenticationDatabase": "admin"
       }
     }
   }
