@@ -13,7 +13,7 @@
     "gestalt": "^0.81.0",
     "html-to-draftjs": "^1.4.0",
     "immutable": "^4.0.0-rc.12",
-    "jquery": "^1.12.4",
+    "jquery": "^3.4.0",
     "react": "^16.11.0",
     "react-collapsible": "^2.6.0",
     "react-dom": "^16.11.0",
